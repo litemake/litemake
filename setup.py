@@ -9,7 +9,7 @@ with open('requirements.txt', mode='r', encoding='utf8') as f:
     DEPENDENCIES = f.read().splitlines()
 
 with open('tests/requirements.txt', mode='r', encoding='utf8') as f:
-    TEST_DEPENDENCIES = f.read.splitlines()
+    TEST_DEPENDENCIES = f.read().splitlines()
 
 setup(
     name="nanomake",
@@ -23,7 +23,7 @@ setup(
     author='Alon Krymgand Osovsky',
     author_email='downtown2u@gmail.com',
 
-    packages=find_packages('./nanomake/'),
+    packages=find_packages(),
     install_requires=DEPENDENCIES,
 
     extras_require={
