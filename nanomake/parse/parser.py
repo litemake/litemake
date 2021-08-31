@@ -11,6 +11,7 @@ from .types import (
 
 from nanomake.exceptions import (
     NanomakeParsingError,
+    NanomakeSetupFileNotFoundError,
 )
 
 
@@ -58,6 +59,9 @@ class SetupConfigParser:
         try:
             with open(filepath, mode='r', encoding='utf8') as file:
                 self.raw = toml.load(file)
+
+        except FileNotFoundError:
+            raise NanomakeSetupFileNotFoundError(filepath) from None
 
         except TomlDecodeError as err:
             raise NanomakeParsingError(

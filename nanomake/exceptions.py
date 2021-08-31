@@ -31,3 +31,12 @@ class NanomakeParsingError(NanomakeError):
             f'*parsing error in {filename}:*',
             f'On line {line}, column {col} - {msg}',
         )
+
+
+class NanomakeSetupFileNotFoundError(NanomakeError):
+    """ Raised if the default (`setup.nanomake.toml`) setup configuration
+    file isn't present or if the custom file (specified with the -f/--flags
+    arguments) isn't found. """
+
+    def __init__(self, filename: str):
+        super().__init__(f'*setup file {filename!r} not found*')
