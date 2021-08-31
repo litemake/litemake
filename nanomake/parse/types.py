@@ -35,13 +35,6 @@ class SetupArgType(ABC):
 
 class SetupStringArg(SetupArgType):
 
-    def validate(self, value):
-        self.assert_type(value, str)
-        return value
-
-
-class SetupNameStringArg(SetupStringArg):
-
     def __init__(self,
                  min_len: int = None,
                  max_len: int = None,
@@ -61,7 +54,7 @@ class SetupNameStringArg(SetupStringArg):
     def validate(self, value) -> str:
 
         # validate type str
-        value = super().validate(value)
+        self.assert_type(value, str)
 
         # validate string length
         if self.min_len is not None:
