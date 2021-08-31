@@ -13,9 +13,9 @@ By configuration a simple `setup.nanomake.toml` file, **nanomake** will be able 
 - Build and run your tests
 - And more!
 
-## Our vision
+## The vision behind nanomake
 
-There is a common phrase among the C/C++ developer community: *"(The convention) doesn't matter, just be consistent"* <sup>[1]</sup>. We however, strongly believe that a good convention is one that allows the developer to implement whatever he wants, but also allows others easily understand the intensions of the former. A good convention won't limit the developer, but will guide him.
+There is a common phrase among the C/C++ developer community: *"(The convention) doesn't matter, just be consistent"* <sup>[1]</sup>. I however, strongly believe that a good convention is one that allows the developer to implement whatever he wants, but also allows others easily understand the intensions of the former. A good convention won't limit the developer, but will guide him.
 
 ### Compering to other programming languages
 
