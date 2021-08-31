@@ -43,7 +43,7 @@ class NanomakePrinter:
 
         # print other lines
         for line in lines:
-            print(cls.PADDING + line.strip())
+            print(cls.PADDING + line)
 
     @classmethod
     def info(cls, info: str) -> None:
@@ -58,6 +58,6 @@ class NanomakePrinter:
 
     @classmethod
     def error(cls, error: str) -> None:
-        special = f'{Color.RED}{Color.BOLD}{Color.UNDERLINE}%s{Color.RESET}'
+        special = f'{Color.RED}{Color.BOLD}%s{Color.RESET}'
         error = cls.replace_special(error, special)
         cls.print(error)
