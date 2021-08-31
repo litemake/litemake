@@ -9,20 +9,20 @@ class Color:
     """ A simple class that wraps the ANSI color escape codes used by
     nanomake. """
 
-    BLACK = u'\u001b[30m'
-    RED = u'\u001b[31m'
-    GREEN = u'\u001b[32m'
-    YELLOW = u'\u001b[33m'
-    BLUE = u'\u001b[34m'
-    MAGENTA = u'\u001b[35m'
-    CYAN = u'\u001b[36m'
-    WHITE = u'\u001b[37m'
+    BLACK = '\u001b[30m'
+    RED = '\u001b[31m'
+    GREEN = '\u001b[32m'
+    YELLOW = '\u001b[33m'
+    BLUE = '\u001b[34m'
+    MAGENTA = '\u001b[35m'
+    CYAN = '\u001b[36m'
+    WHITE = '\u001b[37m'
 
-    BOLD = u'\u001b[1m'
-    UNDERLINE = u'\u001b[4m'
-    REVERSED = u'\u001b[7m'
+    BOLD = '\u001b[1m'
+    UNDERLINE = '\u001b[4m'
+    REVERSED = '\u001b[7m'
 
-    RESET = u'\u001b[0m'
+    RESET = '\u001b[0m'
 
 
 class NanomakePrinter:
