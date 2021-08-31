@@ -5,7 +5,12 @@ else
 endif
 
 install:
-	$(PY) -m pip install -e .
+	$(PY) -m pip install --upgrade pip
+	$(PY) -m pip install .
+
+develop:
+	$(PY) -m pip install --upgrade pip
+	$(PY) -m pip install -e .[dev]
 
 test:
 	$(PY) -m pytest --cov nanomake/
