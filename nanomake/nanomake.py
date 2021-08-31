@@ -41,7 +41,8 @@ def make(args):
     pass  # TODO
 
 
-def main(args):
+def main():
+    args = parser.parse_args()
 
     if args.version:
         version()
@@ -69,4 +70,4 @@ def main(args):
 
 
 if __name__ == '__main__':
-    main(parser.parse_args())
+    main()

@@ -22,4 +22,10 @@ setup(
 
     packages=find_packages('./nanomake/'),
     install_requires=DEPENDENCIES,
+
+    entry_points={
+        'console_scripts': [
+            'nanomake=nanomake:main'
+        ]
+    }
 )

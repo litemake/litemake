@@ -5,7 +5,9 @@ __description__ = 'A new way to build, test and distribute your C/C++ projects a
 __nanomake_spec__ = 1
 
 __all__ = [
+    'main',
     'NanomakePrinter',
 ]
 
+from .nanomake import main
 from .printer import NanomakePrinter
