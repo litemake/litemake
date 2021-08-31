@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 from nanomake import __version__, __description__
 
 with open('README.md', mode='r', encoding='utf8') as f:
@@ -20,6 +20,6 @@ setup(
     author='Alon Krymgand Osovsky',
     author_email='downtown2u@gmail.com',
 
-    packages=['nanomake'],
+    packages=find_packages('./nanomake/'),
     install_requires=DEPENDENCIES,
 )
