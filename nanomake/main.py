@@ -1,8 +1,11 @@
+import traceback
 import argparse
 import sys
 
+
 from . import __description__, __version__, __nanomake_spec__
 from .printer import NanomakePrinter as Printer
+from .exceptions import NanomakeError
 
 parser = argparse.ArgumentParser(
     prog='nanomake', description=__description__,
@@ -34,11 +37,35 @@ def version():
     )))
 
 
+def make(args):
+    pass  # TODO
+
+
 def main(args):
 
     if args.version:
         version()
         sys.exit(0)
+
+    try:
+        make(args)
+        sys.exit(0)
+
+    except NanomakeError as error:
+        error.print()
+        sys.exit(1)
+
+    except Exception:  # pylint: disable=broad-except
+
+        # Remove first line from message:
+        # "Traceback (most recent call last)"
+        err_lines = traceback.format_exc(limit=1).splitlines()
+        err = '\n'.join(err_lines[1:])
+
+        # Print coresponding message and exit with error code 2
+        msg = f'*unexpected error:*\n{err}'
+        Printer.error(msg)
+        sys.exit(2)
 
 
 if __name__ == '__main__':
