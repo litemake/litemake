@@ -27,7 +27,7 @@ setup(
     install_requires=DEPENDENCIES,
 
     extras_require={
-        'test': TEST_DEPENDENCIES
+        'dev': TEST_DEPENDENCIES
     },
 
     entry_points={

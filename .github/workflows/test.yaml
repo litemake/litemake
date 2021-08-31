@@ -16,7 +16,7 @@ jobs:
           python-version: 3.9
 
       - name: Install 📌
-        run: make install
+        run: make develop
 
       - name: Test 🎯
         run: make test
