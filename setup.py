@@ -8,6 +8,9 @@ with open('README.md', mode='r', encoding='utf8') as f:
 with open('requirements.txt', mode='r', encoding='utf8') as f:
     DEPENDENCIES = f.read().splitlines()
 
+with open('tests/requirements.txt', mode='r', encoding='utf8') as f:
+    TEST_DEPENDENCIES = f.read.splitlines()
+
 setup(
     name="nanomake",
     version=__version__,
@@ -22,6 +25,10 @@ setup(
 
     packages=find_packages('./nanomake/'),
     install_requires=DEPENDENCIES,
+
+    extras_require={
+        'test': TEST_DEPENDENCIES
+    },
 
     entry_points={
         'console_scripts': [
