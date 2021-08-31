@@ -17,7 +17,7 @@ class NanomakeConfigError(NanomakeError):
 
     def __init__(self, filename: str, fieldpath: typing.List[str], msg: str):
         super().__init__(
-            f'*configuration error* in {filename!r}:',
+            f'*configuration error in {filename!r}:*',
             f'Under field {fieldpath!r}: {msg}',
         )
 
@@ -26,8 +26,8 @@ class NanomakeParsingError(NanomakeError):
     """ Raised when the configuration file doesn't follow the TOML syntax
     specification and it can't be parsed correctly. """
 
-    def __init__(self, filename: str, msg: str):
+    def __init__(self, filename: str, line: int, col: int, msg: str):
         super().__init__(
-            f'*parsing error* in {filename!r}:',
-            msg
+            f'*parsing error in {filename}:*',
+            f'On line {line}, column {col} - {msg}',
         )

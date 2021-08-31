@@ -1,9 +1,16 @@
 import string
 
+import toml
+from toml import TomlDecodeError
+
 from .types import (
     SetupStringArg as String,
     SetupFolderPathArg as FolderPath,
     SetupIntegerArg as Integer,
+)
+
+from nanomake.exceptions import (
+    NanomakeParsingError,
 )
 
 
@@ -46,3 +53,16 @@ class SetupConfigParser:
             }
         }
     }
+
+    def __init__(self, filepath: str):
+        try:
+            with open(filepath, mode='r', encoding='utf8') as file:
+                self.raw = toml.load(file)
+
+        except TomlDecodeError as err:
+            raise NanomakeParsingError(
+                filename=filepath,
+                line=err.lineno,
+                col=err.colno,
+                msg=err.msg,
+            ) from None

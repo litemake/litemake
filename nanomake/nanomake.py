@@ -6,6 +6,7 @@ import sys
 from . import __description__, __version__, __nanomake_spec__
 from .printer import NanomakePrinter as Printer
 from .exceptions import NanomakeError
+from .parse import SetupConfigParser as Parser
 
 parser = argparse.ArgumentParser(
     prog='nanomake', description=__description__,
@@ -38,7 +39,7 @@ def version():
 
 
 def make(args):
-    pass  # TODO
+    parser = Parser(args.file)
 
 
 def main():
