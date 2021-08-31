@@ -95,3 +95,22 @@ class SetupFolderPathArg(SetupArgType):
         self.assert_type(value, str)
         assert os.path.isfile(value), f"A file named {value!r} already exists"
         return os.path.abspath(value)
+
+
+class SetupIntegerArg(SetupArgType):
+
+    def __init__(self,
+                 range_min: int = None,
+                 range_max: int = None,
+                 default=None,
+                 required=False,
+                 ) -> None:
+        super().__init__(default=default, required=required)
+        self.range_min = range_min
+        self.range_max = range_max
+
+    def validate(self, value):
+        self.assert_type(value, int)
+        assert value >= self.range_min, f"Minimum value is {self.range_min!r}"
+        assert value <= self.range_max, f"Maximum value is {self.range_max!r}"
+        return value
