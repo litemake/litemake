@@ -5,7 +5,7 @@ import toml
 from toml import TomlDecodeError
 
 from .types import (
-    SetupArgType,
+    SetupArgTemplate,
     SetupStringArg as String,
     SetupFolderPathArg as FolderPath,
     SetupIntegerArg as Integer,
@@ -91,9 +91,9 @@ class SetupConfigParser:
             raise NanomakeConfigError(
                 self.filepath, path, msg='Unknown field')
 
-        if isinstance(template, SetupArgType):
+        if isinstance(template, SetupArgTemplate):
             # RECURSIVE BASECASE:
-            # if the template is an instance of 'SetupArgType',
+            # if the template is an instance of 'SetupArgTemplate',
             # we want to actually check the data in the field.
 
             if raw is None and template.required:
@@ -110,13 +110,13 @@ class SetupConfigParser:
             else:
                 # If the user provided some data in this field,
                 # we will need to validate the given data using
-                # the 'validate' method of the 'SetupArgType' class
+                # the 'validate' method of the 'SetupArgTemplate' class
 
                 try:
                     return template.validate(raw)
 
                 except AssertionError as err:
-                    # The 'SetupArgType' class uses assertions to validate
+                    # The 'SetupArgTemplate' class uses assertions to validate
                     # data. If an assertion statemant fails, the data doesn't
                     # follow the template and we need to raise an error.
                     raise NanomakeConfigError(

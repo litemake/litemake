@@ -5,7 +5,7 @@ import os.path
 from abc import ABC, abstractmethod
 
 
-class SetupArgType(ABC):
+class SetupArgTemplate(ABC):
 
     def __init__(self, default=None, required=False):
         self.default = default
@@ -34,7 +34,7 @@ class SetupArgType(ABC):
         assert isinstance(value, type), f'{required}, {notwhat}'
 
 
-class SetupStringArg(SetupArgType):
+class SetupStringArg(SetupArgTemplate):
 
     def __init__(self,
                  min_len: int = None,
@@ -89,7 +89,7 @@ class SetupStringArg(SetupArgType):
         return value
 
 
-class SetupFolderPathArg(SetupArgType):
+class SetupFolderPathArg(SetupArgTemplate):
 
     def validate(self, value):
         self.assert_type(value, str)
@@ -97,7 +97,7 @@ class SetupFolderPathArg(SetupArgType):
         return os.path.abspath(value)
 
 
-class SetupIntegerArg(SetupArgType):
+class SetupIntegerArg(SetupArgTemplate):
 
     def __init__(self,
                  range_min: int = None,
