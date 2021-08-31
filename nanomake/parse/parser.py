@@ -4,7 +4,7 @@ import string
 import toml
 from toml import TomlDecodeError
 
-from .types import (
+from .templates import (
     SetupArgTemplate,
     SetupStringArg as String,
     SetupFolderPathArg as FolderPath,

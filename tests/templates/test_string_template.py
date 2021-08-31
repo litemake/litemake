@@ -1,5 +1,5 @@
 import pytest
-from nanomake.parse.types import SetupStringArg
+from nanomake.parse.templates import SetupStringArg
 
 PASS = True
 FAIL = False
