@@ -18,7 +18,7 @@ class NanomakeConfigError(NanomakeError):
     def __init__(self, filename: str, fieldpath: typing.List[str], msg: str):
         super().__init__(
             f'*configuration error in {filename!r}:*',
-            f'Under field {fieldpath!r}: {msg}',
+            f'Under field {".".join(fieldpath)!r} - {msg}',
         )
 
 
