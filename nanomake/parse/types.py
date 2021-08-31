@@ -1,6 +1,7 @@
 ''' /parse/types.py - nanomake - Alon Krymgand Osovsky (2021) '''
 
 import re
+import os.path
 from abc import ABC, abstractmethod
 
 
@@ -86,3 +87,11 @@ class SetupStringArg(SetupArgType):
                 f"Character {value[-1]!r} isn't allowed as an ending character")
 
         return value
+
+
+class SetupFolderPathArg(SetupArgType):
+
+    def validate(self, value):
+        self.assert_type(value, str)
+        assert os.path.isfile(value), f"A file named {value!r} already exists"
+        return os.path.abspath(value)
