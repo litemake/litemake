@@ -1,0 +1,22 @@
+name: ✅️ Test
+
+on: [push, pull_request]  [push]:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clone 👀
+        uses: actions/checkout@v2
+
+      - name: Setup Python 🐍
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+
+      - name: Install 📌
+        run: make install
+
+      - name: Test 🎯
+        run: make test
