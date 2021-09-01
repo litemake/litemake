@@ -1,9 +1,7 @@
 from setuptools import setup, find_packages
-from nanomake import __version__, __description__
 
 with open('README.md', mode='r', encoding='utf8') as f:
     README = f.read()
-
 
 with open('requirements.txt', mode='r', encoding='utf8') as f:
     DEPENDENCIES = f.read().splitlines()
@@ -13,8 +11,8 @@ with open('tests/requirements.txt', mode='r', encoding='utf8') as f:
 
 setup(
     name="nanomake",
-    version=__version__,
-    description=__description__,
+    version='0.1.0',
+    description='A new way to build, test and distribute your C/C++ projects and libraries 🚀',
     python_requires='>=3.9,<4',
 
     long_description=README,
@@ -27,7 +25,7 @@ setup(
     install_requires=DEPENDENCIES,
 
     extras_require={
-        'dev': TEST_DEPENDENCIES
+        'dev': TEST_DEPENDENCIES,
     },
 
     entry_points={
