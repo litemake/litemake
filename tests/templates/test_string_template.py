@@ -18,8 +18,19 @@ class TestStringTemplates:
                 t.validate(value)
 
     @pytest.mark.parametrize('value, expected', [
-        (123, FAIL),
-        (9_999_999, FAIL),
+        ('hello', PASS),
+        ('', PASS),
+        (' ', PASS),
+        ('0', PASS),
+        (0, FAIL),
+        (None, FAIL),
+        (False, FAIL),
+        (True, FAIL),
+    ])
+    def test_no_kwargs(self, value, expected):
+        self._test_string_arg(value, expected)
+
+    @pytest.mark.parametrize('value, expected', [
         ('long long string', PASS),
         ('lo', PASS),
         ('1', PASS),
@@ -29,8 +40,6 @@ class TestStringTemplates:
         self._test_string_arg(value, expected, min_len=1)
 
     @pytest.mark.parametrize('value, expected', [
-        (123, FAIL),
-        (0, FAIL),
         ('', PASS),
         ('0', PASS),
         ('None', PASS),
@@ -39,8 +48,6 @@ class TestStringTemplates:
         self._test_string_arg(value, expected, min_len=0)
 
     @pytest.mark.parametrize('value, expected', [
-        (12345, FAIL),
-        (True, FAIL),
         ('0', FAIL),
         ('5', FAIL),
         ('12345', PASS),
@@ -50,11 +57,6 @@ class TestStringTemplates:
         self._test_string_arg(value, expected, min_len=5)
 
     @pytest.mark.parametrize('value, expected', [
-        (1234, FAIL),
-        (0, FAIL),
-        (None, FAIL),
-        (True, FAIL),
-        (False, FAIL),
         ('', PASS),
         ('o', PASS),
         ('ש', PASS),
@@ -64,20 +66,14 @@ class TestStringTemplates:
         self._test_string_arg(value, expected, max_len=1)
 
     @pytest.mark.parametrize('value, expected', [
-        (0, FAIL),
         ('', PASS),
         (' ', FAIL),
         ('\n', FAIL),
-        (123, FAIL),
-        (False, FAIL),
-        (None, FAIL),
     ])
     def test_max_zero(self, value, expected):
         self._test_string_arg(value, expected, max_len=0)
 
     @pytest.mark.parametrize('value, expected', [
-        (12, FAIL),
-        (1234567, FAIL),
         ('1', PASS),
         ('', PASS),
         ('HELLO', PASS),
