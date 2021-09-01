@@ -14,3 +14,6 @@ develop:
 
 test:
 	$(PY) -m pytest --cov nanomake/
+
+cov:
+	$(PY) -m pytest --cov nanomake/ --cov-report xml --cov-report term
