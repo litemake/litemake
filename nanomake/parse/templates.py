@@ -76,7 +76,6 @@ class SetupStringArg(SetupArgTemplate):
         if self.no_repeating is not None:
             if len(value) >= 2:
                 for c, cc in zip(value[1:], value[:-1]):
-                    print(f'comparing {c=} with {cc=}')
                     if c in self.no_repeating and cc in self.no_repeating:
                         raise AssertionError(
                             f"Character {c!r} can't be followed by {c!r}")

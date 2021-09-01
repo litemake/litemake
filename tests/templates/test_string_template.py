@@ -1,8 +1,7 @@
 import pytest
-from nanomake.parse.templates import SetupStringArg
+from tests.utils import PASS, FAIL
 
-PASS = True
-FAIL = False
+from nanomake.parse.templates import SetupStringArg
 
 
 class TestStringTemplates:
