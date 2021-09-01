@@ -81,3 +81,32 @@ class TestStringTemplates:
     ])
     def test_max_five(self, value, expected):
         self._test_string_arg(value, expected, max_len=5)
+
+    @pytest.mark.parametrize('allowed, value, expected', [
+        ('abc', 'aaabbbbbbcccccc', PASS),
+        ('abc', 'abc abc', FAIL),
+        ('', '', PASS),
+        ('', ' ', FAIL),
+        (' ', '    ', PASS),
+        (' ', '\t', FAIL),
+    ])
+    def test_allowed_chars(self, allowed, value, expected):
+        self._test_string_arg(value, expected, allowed_chars=allowed)
+
+    @pytest.mark.parametrize('banned, value, expected', [
+        ('a', 'Hello there!', PASS),
+        ('l', 'Hello there!', FAIL),
+        ('er', 'Hello there!', FAIL),
+    ])
+    def test_no_repeating(self, banned, value, expected):
+        self._test_string_arg(value, expected, no_repeating=banned)
+
+    @pytest.mark.parametrize('banned, value, expected', [
+        ('a', 'Hello there!', PASS),
+        ('e', 'Hello there!', PASS),
+        ('!', 'Hello there!', FAIL),
+        ('H', 'Hello there!', FAIL),
+        ('H!', 'Hello there!', FAIL),
+    ])
+    def test_no_on_edges(self, banned, value, expected):
+        self._test_string_arg(value, expected, no_on_edges=banned)
