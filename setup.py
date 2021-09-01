@@ -30,7 +30,7 @@ setup(
 
     entry_points={
         'console_scripts': [
-            'nanomake=nanomake:main'
+            'nanomake=nanomake.__main__:main'
         ]
     }
 )

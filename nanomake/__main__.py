@@ -40,6 +40,7 @@ def version():
 
 def make(args):
     parser = Parser(args.file)
+    print(parser.raw)
 
 
 def main():
@@ -61,7 +62,7 @@ def main():
 
         # Remove first line from message:
         # "Traceback (most recent call last)"
-        err_lines = traceback.format_exc(limit=1).splitlines()
+        err_lines = traceback.format_exc(limit=3).splitlines()
         err = '\n'.join(err_lines[1:])
 
         # Print coresponding message and exit with error code 2
