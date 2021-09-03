@@ -21,6 +21,7 @@ jobs:
   test:
     name: Test (Ubuntu) 🎯
     runs-on: ubuntu-latest
+    needs: install
     steps:
       - name: Clone 👀
         uses: actions/checkout@v2
