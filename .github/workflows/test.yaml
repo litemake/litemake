@@ -3,9 +3,22 @@ name: ✅️ Test
 on: [push, pull_request]
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
+  runs-on: [ubuntu-latest, windows-latest, macos-latest]
 
+  install:
+    steps:
+      - name: Clone 👀
+        uses: actions/checkout@v2
+
+      - name: Setup Python 🐍
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+
+      - name: Install 📌
+        run: make install
+
+  test:
     steps:
       - name: Clone 👀
         uses: actions/checkout@v2
