@@ -3,9 +3,8 @@ name: ✅️ Test
 on: [push, pull_request]
 
 jobs:
-  runs-on: [ubuntu-latest, windows-latest, macos-latest]
-
   install:
+    runs-on: [ubuntu-latest, windows-latest, macos-latest]
     steps:
       - name: Clone 👀
         uses: actions/checkout@v2
@@ -19,6 +18,7 @@ jobs:
         run: make install
 
   test:
+    runs-on: [ubuntu-latest, windows-latest, macos-latest]
     steps:
       - name: Clone 👀
         uses: actions/checkout@v2
