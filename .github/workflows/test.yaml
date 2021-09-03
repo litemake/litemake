@@ -4,7 +4,8 @@ on: [push, pull_request]
 
 jobs:
   install:
-    runs-on: [ubuntu-latest, windows-latest, macos-latest]
+    name: Install (Ubuntu) 📌
+    runs-on: ubuntu-latest
     steps:
       - name: Clone 👀
         uses: actions/checkout@v2
@@ -18,7 +19,8 @@ jobs:
         run: make install
 
   test:
-    runs-on: [ubuntu-latest, windows-latest, macos-latest]
+    name: Test (Ubuntu) 🎯
+    runs-on: ubuntu-latest
     steps:
       - name: Clone 👀
         uses: actions/checkout@v2
