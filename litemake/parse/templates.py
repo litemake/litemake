@@ -111,9 +111,43 @@ class SetupIntegerArg(SetupArgTemplate):
 
     def validate(self, value):
         self.assert_type(value, int)
-        assert value >= self.range_min, f"Minimum value is {self.range_min!r}"
-        assert value <= self.range_max, f"Maximum value is {self.range_max!r}"
+
+        if self.range_min is not None:
+            assert value >= self.range_min, f"Minimum value is {self.range_min!r}"
+
+        if self.range_max is not None:
+            assert value <= self.range_max, f"Maximum value is {self.range_max!r}"
+
         return value
+
+
+class SetupListOfArg(SetupArgTemplate):
+
+    def __init__(self,
+                 listof: SetupArgTemplate,
+                 min_len: int = None,
+                 max_len: int = None,
+                 default=None,
+                 required=False,
+                 ) -> None:
+        super().__init__(default=default, required=required)
+        self.listof = listof
+        self.min_len = min_len
+        self.max_len = max_len
+
+    def validate(self, value):
+        self.assert_type(value, list)
+
+        if self.min_len is not None:
+            assert self.min_len <= len(
+                value), f"Minimum {self.min_len!r} items required"
+
+        if self.max_len is not None:
+            assert self.max_len >= len(
+                value), f"Maximum {self.max_len!r} items allowed"
+
+        for item in value:
+            self.listof.validate(item)
 
 
 class SetupTargetsListArg(SetupArgTemplate):
