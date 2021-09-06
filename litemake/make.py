@@ -7,7 +7,7 @@
 
 import typing
 from os import path, listdir
-from abc import ABC, abstractmethod
+from abc import ABC
 
 
 class Make(ABC):
@@ -28,7 +28,7 @@ class MakeFile(Make):
         the output file. If the output file doesn't exist, returns `True`.
         If `True`, the input files needs to be updated and recompiled! """
 
-        if not path.exists(self.input):
+        if not path.exists(self.output):
             return True
 
         return path.getmtime(self.input) > path.getmtime(self.output)
@@ -41,18 +41,19 @@ class MakeFolder(Make):
         assert path.isdir(input)
         self.children = set(self._get_children())
 
-    def _get_children(self,):
+    def _get_children(self,) -> typing.Generator[typing.Union['MakeFile', 'MakeFolder'], None, None]:
 
         for cur_in in listdir(self.input):
+            cur_in = path.join(self.input, cur_in)
             cur_out = path.join(self.output, path.basename(cur_in))
 
-            if cur_in.is_dir():
+            if path.isdir(cur_in):
                 yield MakeFolder(cur_in, cur_out)
 
-            elif cur_in.is_file():
+            elif path.isfile(cur_in):
                 yield MakeFile(cur_in, cur_out)
 
-    def needs_update(self,):
+    def needs_update(self,) -> typing.Generator['MakeFile', None, None]:
         """ A generator that yields `MakeFile` instances that are located
         in under this `MakeFolder` instance (recursive). The yielded files
         need to be updated. """
