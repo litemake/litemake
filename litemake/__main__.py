@@ -47,7 +47,8 @@ def make(args):
         src='.',
         dest=parser.config['litemake']['output'],
         compiler=parser.config['litemake']['compiler'],
-        flags=parser.config['litemake']['flags']
+        flags=parser.config['litemake']['flags'],
+        objext=parser.config['litemake']['objext'],
     )
 
 

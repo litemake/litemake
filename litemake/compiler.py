@@ -10,12 +10,18 @@ from .printer import litemakePrinter as Printer
 
 class litemakeCompiler:
 
-    def __init__(self, src: str, dest: str,
-                 compiler: str, flags: typing.List[str]) -> None:
+    def __init__(self,
+                 src: str,
+                 dest: str,
+                 compiler: str,
+                 flags: typing.List[str],
+                 objext: str,
+                 ) -> None:
         self.src = src
         self.dest = dest
         self.compiler = compiler
         self.flags = flags
+        self.objext = objext
 
     def _compile(self, *args: typing.List[str]) -> None:
         """ Recives a list of strings that represents a command arguments.
@@ -36,3 +42,21 @@ class litemakeCompiler:
                 subprocess=self.compiler,
                 error_msg=result.stderr,
             )
+
+    def compile_obj(self, filepath: str) -> None:
+
+        src_dir = path.dirname(filepath)
+        rel_dir = path.relpath(src_dir, start=self.src)
+        dest_dir = path.join(self.dest, rel_dir)
+
+        makedirs(dest_dir, exist_ok=True)
+
+        filename = path.basename(filepath)
+        name, ext = path.splitext(filename)
+
+        dest = path.join(dest_dir, name + self.objext)
+
+        # TODO: To support less popular compilers, add the template command
+        #       to the configuration setup file, instead of hardcoding '-c'
+        #       and '-o' options.
+        self._compile('-c', filepath, '-o', dest)

@@ -149,6 +149,8 @@ class SetupListOfArg(SetupArgTemplate):
         for item in value:
             self.listof.validate(item)
 
+        return value
+
 
 class SetupTargetsListArg(SetupArgTemplate):
 
@@ -160,3 +162,5 @@ class SetupTargetsListArg(SetupArgTemplate):
 
         for key, item in value.items():
             self.name_template.validate(key)
+
+        return value

@@ -33,6 +33,8 @@ class SetupConfigParser:
             # TODO: support for default factory. In this case, we use the template
             #       only once each run, and thus it is "ok".
 
+            'objext': String(default='.o'),
+
             'meta': {
                 'name': String(
                     required=True,
