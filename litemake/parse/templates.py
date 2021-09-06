@@ -140,11 +140,11 @@ class SetupListOfArg(SetupArgTemplate):
 
         if self.min_len is not None:
             assert self.min_len <= len(
-                value), f"Minimum {self.min_len!r} items required"
+                value), f"Minimum {self.min_len!r} item(s) required"
 
         if self.max_len is not None:
             assert self.max_len >= len(
-                value), f"Maximum {self.max_len!r} items allowed"
+                value), f"Maximum {self.max_len!r} item(s) allowed"
 
         for item in value:
             self.listof.validate(item)
