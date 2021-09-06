@@ -28,8 +28,9 @@ parser.add_argument(
     default='setup.litemake.toml',
 )
 parser.add_argument(
-    '-v', '--verbose', action='store_true', default=False,
-    help='prints the commands that litemake executes',
+    '--no-verbose', action='store_true', default=False,
+    help="disables printing of commands executed by 'litemake'. " +
+    "Error messages and 'litemake' summary message will still be printed.",
 )
 
 
@@ -41,7 +42,6 @@ def version():
 
 def make(args):
     parser = Parser(args.file)
-    print(parser.config)
 
     compiler = Compiler(
         src='.',
@@ -55,6 +55,7 @@ def make(args):
 
 def main():
     args = parser.parse_args()
+    Printer.set_verbose(not args.no_verbose)
 
     if args.version:
         version()
