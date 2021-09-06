@@ -72,7 +72,6 @@ class SetupStringArg(SetupArgTemplate):
                 assert c in self.allowed_chars, f'Character {c!r} is not allowed'
 
         # validate no repeating chars
-        print(f'{self.no_repeating=}')
         if self.no_repeating is not None:
             if len(value) >= 2:
                 for c, cc in zip(value[1:], value[:-1]):
@@ -115,3 +114,15 @@ class SetupIntegerArg(SetupArgTemplate):
         assert value >= self.range_min, f"Minimum value is {self.range_min!r}"
         assert value <= self.range_max, f"Maximum value is {self.range_max!r}"
         return value
+
+
+class SetupTargetsListArg(SetupArgTemplate):
+
+    def __init__(self, name_template: SetupArgTemplate):
+        self.name_template = name_template
+
+    def validate(self, value):
+        self.assert_type(value, dict)
+
+        for key, item in value.items():
+            self.name_template.validate(key)

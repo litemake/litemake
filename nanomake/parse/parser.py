@@ -20,15 +20,14 @@ from nanomake.exceptions import (
 
 class SetupConfigParser:
 
-    NAME_CHARS = string.ascii_letters + string.digits + '-_.'
     SPECIAL_CHARS = '-_.'
+    NAME_CHARS = string.ascii_letters + string.digits + SPECIAL_CHARS
 
     TEMPLATE = {
         'nanomake': {
             'spec': Integer(range_min=0, default=0),
             'output': FolderPath(default='./build/'),
             'compiler': String(default='g++'),
-            'objext': String(default='{relativeOutputFolder}/{baseFileName}.o'),
 
             'meta': {
                 'name': String(
