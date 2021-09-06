@@ -34,6 +34,11 @@ class SetupConfigParser:
             #       only once each run, and thus it is "ok".
 
             'objext': String(default='.o'),
+            'srcext': ListOf(
+                listof=String(min_len=1),
+                min_len=1,
+                default=['.cpp', '.cc', '.c'],
+            ),
 
             'meta': {
                 'name': String(
