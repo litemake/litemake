@@ -9,6 +9,7 @@ from .templates import (
     SetupStringArg as String,
     SetupFolderPathArg as FolderPath,
     SetupIntegerArg as Integer,
+    SetupListOfArg as ListOf,
 )
 
 from litemake.exceptions import (
@@ -26,8 +27,11 @@ class SetupConfigParser:
     TEMPLATE = {
         'litemake': {
             'spec': Integer(range_min=0, default=0),
-            'output': FolderPath(default='./build/'),
+            'output': FolderPath(default='./.litemake/'),
             'compiler': String(default='g++'),
+            'flags': ListOf(String(min_len=1), default=list()),
+            # TODO: support for default factory. In this case, we use the template
+            #       only once each run, and thus it is "ok".
 
             'meta': {
                 'name': String(
