@@ -3,6 +3,7 @@
     A class that takes care of all printing done by litemake. '''
 
 import re
+import typing
 
 
 class Color:
@@ -17,6 +18,7 @@ class Color:
     MAGENTA = '\u001b[35m'
     CYAN = '\u001b[36m'
     WHITE = '\u001b[37m'
+    GREY = '\u001b[90m'
 
     BOLD = '\u001b[1m'
     UNDERLINE = '\u001b[4m'
@@ -46,6 +48,12 @@ class litemakePrinter:
             print(cls.PADDING + line)
 
     @classmethod
+    def debug(cls, info: str) -> None:
+        msg = cls.replace_special(
+            info, f'{Color.BOLD}%s{Color.RESET}{Color.GREY}')
+        cls.print(f'{Color.GREY}{msg}{Color.RESET}')
+
+    @classmethod
     def info(cls, info: str) -> None:
         info = cls.replace_special(info, f'{Color.BOLD}%s{Color.RESET}')
         cls.print(info)
@@ -61,3 +69,11 @@ class litemakePrinter:
         special = f'{Color.RED}{Color.BOLD}%s{Color.RESET}'
         error = cls.replace_special(error, special)
         cls.print(error)
+
+    @classmethod
+    def command(cls, cmd: typing.List[str]) -> None:
+        """ Called by the 'compiler' object when a compelation process begins. """
+        cls.debug('\n'.join((
+            '*executing command:*',
+            ' '.join(cmd),
+        )))
