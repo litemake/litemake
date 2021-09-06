@@ -65,35 +65,46 @@ class litemakeCompiler:
         #       and '-o' options.
         self._compile('-c', filepath, '-o', dest)
 
-    def compile_file(self, filepath: str) -> None:
+    def compile_file(self, filepath: str) -> bool:
+        """ Recives a path to a source file, and checks if it really needs to
+        be compiled. If it does indeed, the file is compiled and the function
+        returns `True`. If the file isn't compiled, the returned value is
+        `False`. """
 
         if not any(filepath.endswith(ext) for ext in self.srcext):
             # This is not a source file -> nothing to compile! -> exit
-            return
+            return False
 
         dest = self._dest_filepath(filepath)
 
-        if not path.exists(dest):
-            # If object file isn't compiled yet -> we should compile it.
+        if not path.exists(dest) or path.getmtime(filepath) > path.getmtime(dest):
+            # Case 1: If object file isn't compiled yet -> we should compile it.
+            # Case 2: If the source file is newer then the compiled one, we need
+            #         to recompile.
+
             # TODO: in this case, the '_dest_filepath' function we be called
             #       twice (first time here, and second time in the 'compile_obj'
             #       function). It is possible to cache the result using the
             #       'cache' decorator, or pass the path as a parameter.
             self.compile_obj(filepath)
+            return True
+        return False
 
-        if path.getmtime(filepath) > path.getmtime(dest):
-            # If the source file is newer then the compiled one, we need
-            # to recompile.
-            self.compile_obj(filepath)
+    def compile_folder(self, src: str) -> int:
+        """ Recives a source directory, and recursively searches inside it to
+        find all files that require compilation, and compiles them. Returns
+        the number of files compiled. """
 
-    def compile_folder(self, src: str) -> None:
         assert path.isdir(src), f"expected directory {src!r}"
+        compiled = 0
 
         for name in listdir(src):
             cur = path.join(src, name)
 
             if path.isfile(cur):
-                self.compile_file(cur)
+                compiled += self.compile_file(cur)
 
             elif path.isdir(cur):
-                self.compile_folder(cur)
+                compiled += self.compile_folder(cur)
+
+        return compiled
