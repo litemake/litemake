@@ -1,8 +1,8 @@
 import typing
-from .printer import NanomakePrinter as Printer
+from .printer import litemakePrinter as Printer
 
 
-class NanomakeError(Exception):
+class litemakeError(Exception):
 
     def __init__(self, *msg: str):
         self.msg = msg
@@ -11,8 +11,8 @@ class NanomakeError(Exception):
         Printer.error('\n'.join(self.msg))
 
 
-class NanomakeConfigError(NanomakeError):
-    """ Raised when there is an error in the nanomake setup configuration
+class litemakeConfigError(litemakeError):
+    """ Raised when there is an error in the litemake setup configuration
     file. """
 
     def __init__(self, filename: str, fieldpath: typing.List[str], msg: str):
@@ -22,7 +22,7 @@ class NanomakeConfigError(NanomakeError):
         )
 
 
-class NanomakeParsingError(NanomakeError):
+class litemakeParsingError(litemakeError):
     """ Raised when the configuration file doesn't follow the TOML syntax
     specification and it can't be parsed correctly. """
 
@@ -33,8 +33,8 @@ class NanomakeParsingError(NanomakeError):
         )
 
 
-class NanomakeSetupFileNotFoundError(NanomakeError):
-    """ Raised if the default (`setup.nanomake.toml`) setup configuration
+class litemakeSetupFileNotFoundError(litemakeError):
+    """ Raised if the default (`setup.litemake.toml`) setup configuration
     file isn't present or if the custom file (specified with the -f/--flags
     arguments) isn't found. """
 

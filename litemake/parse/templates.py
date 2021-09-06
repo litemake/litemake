@@ -1,4 +1,4 @@
-''' /parse/templates.py - nanomake - Alon Krymgand Osovsky (2021) '''
+''' /parse/templates.py - litemake - Alon Krymgand Osovsky (2021) '''
 
 import re
 import os.path

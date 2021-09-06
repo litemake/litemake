@@ -11,10 +11,10 @@ from .templates import (
     SetupIntegerArg as Integer,
 )
 
-from nanomake.exceptions import (
-    NanomakeParsingError,
-    NanomakeSetupFileNotFoundError,
-    NanomakeConfigError,
+from litemake.exceptions import (
+    litemakeParsingError,
+    litemakeSetupFileNotFoundError,
+    litemakeConfigError,
 )
 
 
@@ -24,7 +24,7 @@ class SetupConfigParser:
     NAME_CHARS = string.ascii_letters + string.digits + SPECIAL_CHARS
 
     TEMPLATE = {
-        'nanomake': {
+        'litemake': {
             'spec': Integer(range_min=0, default=0),
             'output': FolderPath(default='./build/'),
             'compiler': String(default='g++'),
@@ -65,10 +65,10 @@ class SetupConfigParser:
                 self.raw = toml.load(file)
 
         except FileNotFoundError:
-            raise NanomakeSetupFileNotFoundError(filepath) from None
+            raise litemakeSetupFileNotFoundError(filepath) from None
 
         except TomlDecodeError as err:
-            raise NanomakeParsingError(
+            raise litemakeParsingError(
                 filename=filepath,
                 line=err.lineno,
                 col=err.colno,
@@ -87,7 +87,7 @@ class SetupConfigParser:
             # If there is no template to validate,
             # we got to this point by the user that used an invalid
             # field, and thus we will raise an error.
-            raise NanomakeConfigError(
+            raise litemakeConfigError(
                 self.filepath, path, msg='Unknown field')
 
         if isinstance(template, SetupArgTemplate):
@@ -98,7 +98,7 @@ class SetupConfigParser:
             if raw is None and template.required:
                 # If the data isn't provided by the user but required,
                 # we will raise an error
-                raise NanomakeConfigError(
+                raise litemakeConfigError(
                     self.filepath, path, msg='Missing required field')
 
             elif raw is None and not template.required:
@@ -118,7 +118,7 @@ class SetupConfigParser:
                     # The 'SetupArgTemplate' class uses assertions to validate
                     # data. If an assertion statemant fails, the data doesn't
                     # follow the template and we need to raise an error.
-                    raise NanomakeConfigError(
+                    raise litemakeConfigError(
                         self.filepath, path, ' '.join(err.args))
 
         if isinstance(template, dict):
@@ -135,7 +135,7 @@ class SetupConfigParser:
             if not isinstance(raw, dict):
                 # If the template is a dict, the user must provide a dic too.
                 # if the raw instance isn't a dict, we will raise an error!
-                raise NanomakeConfigError(
+                raise litemakeConfigError(
                     self.filepath, path, 'Unexpected field')
 
             # We will get to this point if both the template and the raw data

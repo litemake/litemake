@@ -1,8 +1,8 @@
-''' make.py - nanomake - Alon Krymgand Osovsky (2021)
+''' make.py - litemake - Alon Krymgand Osovsky (2021)
 
     In this file, we contain the implementation of tools similar to the GNU
     Make tool. Using this, we can detect files that have been changed since
-    the last 'nanomake' call, and recompile only them.
+    the last 'litemake' call, and recompile only them.
 '''
 
 import typing

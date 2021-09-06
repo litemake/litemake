@@ -13,10 +13,10 @@ develop:
 	$(PY) -m pip install -e .[dev]
 
 test:
-	$(PY) -m pytest --cov nanomake/
+	$(PY) -m pytest --cov litemake/
 
 cov:
-	$(PY) -m pytest --cov nanomake/ --cov-report xml --cov-report term
+	$(PY) -m pytest --cov litemake/ --cov-report xml --cov-report term
 
 
 .PHONY: intall develop test cov

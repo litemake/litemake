@@ -1,13 +1,13 @@
-''' printer.py - nanomake - Alon Krymgand Osovsky (2021)
+''' printer.py - litemake - Alon Krymgand Osovsky (2021)
 
-    A class that takes care of all printing done by nanomake. '''
+    A class that takes care of all printing done by litemake. '''
 
 import re
 
 
 class Color:
     """ A simple class that wraps the ANSI color escape codes used by
-    nanomake. """
+    litemake. """
 
     BLACK = '\u001b[30m'
     RED = '\u001b[31m'
@@ -25,9 +25,9 @@ class Color:
     RESET = '\u001b[0m'
 
 
-class NanomakePrinter:
+class litemakePrinter:
 
-    TITLE = Color.BOLD + Color.BLUE + 'nanomake:' + Color.RESET
+    TITLE = Color.BOLD + Color.BLUE + 'litemake:' + Color.RESET
     PADDING = ' ' * 2
 
     @staticmethod

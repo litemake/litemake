@@ -1,7 +1,7 @@
 import pytest
 from tests.utils import PASS, FAIL
 
-from nanomake.parse.templates import SetupStringArg
+from litemake.parse.templates import SetupStringArg
 
 
 class TestStringTemplates:

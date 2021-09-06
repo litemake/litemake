@@ -10,7 +10,7 @@ with open('tests/requirements.txt', mode='r', encoding='utf8') as f:
     TEST_DEPENDENCIES = f.read().splitlines()
 
 setup(
-    name="nanomake",
+    name="litemake",
     version='0.1.0',
     description='A new way to build, test and distribute your C/C++ projects and libraries 🚀',
     python_requires='>=3.9,<4',
@@ -30,7 +30,7 @@ setup(
 
     entry_points={
         'console_scripts': [
-            'nanomake=nanomake.__main__:main'
+            'litemake=litemake.__main__:main'
         ]
     }
 )
