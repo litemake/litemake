@@ -1,6 +1,5 @@
 ''' /parse/templates.py - litemake - Alon Krymgand Osovsky (2021) '''
 
-import re
 import os.path
 from abc import ABC, abstractmethod
 
@@ -152,15 +151,40 @@ class SetupListOfArg(SetupArgTemplate):
         return value
 
 
-class SetupTargetsListArg(SetupArgTemplate):
+class SetupDictArg(SetupArgTemplate):
 
-    def __init__(self, name_template: SetupArgTemplate):
-        self.name_template = name_template
+    def __init__(self,
+                 keys: SetupArgTemplate,
+                 values: SetupArgTemplate,
+                 min_len: int = None,
+                 max_len: int = None,
+                 default=None,
+                 required=False,
+                 ) -> None:
+        super().__init__(default=default, required=required)
+        self.keys = keys
+        self.values = values
+
+        # TODO: Combine all templates with 'min, max length' settings
+        #       into a single class that others can inherit from.
+        self.min_len = min_len
+        self.max_len = max_len
 
     def validate(self, value):
         self.assert_type(value, dict)
 
-        for key, item in value.items():
-            self.name_template.validate(key)
+        if self.min_len is not None:
+            assert self.min_len <= len(
+                value), f"Minimum {self.min_len!r} item(s) required"
 
-        return value
+        if self.max_len is not None:
+            assert self.max_len >= len(
+                value), f"Maximum {self.max_len!r} item(s) allowed"
+
+        new = dict()
+        for key, item in value.items():
+            new_key = self.keys.validate(key)
+            new_val = self.values.validate(item)
+            new[new_key] = new_val
+
+        return new
