@@ -40,3 +40,14 @@ class litemakeSetupFileNotFoundError(litemakeError):
 
     def __init__(self, filename: str):
         super().__init__(f'*setup file {filename!r} not found*')
+
+
+class litemakeCompilationError(litemakeError):
+    """ Raised by the 'compiler' object if when calling the compiler (gcc, g++,
+    clang), it returned a non-zero code. """
+
+    def __init__(self, subprocess: str, error_msg: str):
+        super().__init__(
+            f'*error while calling {subprocess!r}:*',
+            error_msg,
+        )

@@ -7,6 +7,7 @@ from . import __description__, __version__, __litemake_spec__
 from .printer import litemakePrinter as Printer
 from .exceptions import litemakeError
 from .parse import SetupConfigParser as Parser
+from .compiler import litemakeCompiler as Compiler
 
 parser = argparse.ArgumentParser(
     prog='litemake', description=__description__,
@@ -41,6 +42,13 @@ def version():
 def make(args):
     parser = Parser(args.file)
     print(parser.config)
+
+    compiler = Compiler(
+        src='.',
+        dest=parser.config['litemake']['output'],
+        compiler=parser.config['litemake']['compiler'],
+        flags=parser.config['litemake']['flags']
+    )
 
 
 def main():
