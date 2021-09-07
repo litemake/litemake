@@ -4,12 +4,12 @@ import subprocess
 from os import path, makedirs, listdir
 from glob import glob
 
-from .exceptions import (
+from litemake.exceptions import (
     litemakeCompilationError,
     litemakeNoSourcesWarning,
 )
 
-from .printer import litemakePrinter as Printer
+from litemake.printer import litemakePrinter as Printer
 
 
 class litemakeCompiler:

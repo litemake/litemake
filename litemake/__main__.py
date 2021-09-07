@@ -7,9 +7,9 @@ from . import __description__, __version__, __litemake_spec__
 from .printer import litemakePrinter as Printer
 from .exceptions import litemakeError
 from .parse import SetupConfigParser as Parser
-from .compiler import litemakeCompiler as Compiler
+from .compile import litemakeCompiler as Compiler
 
-parser = argparse.ArgumentParser(
+parser = argparse.ArgumentParser(  # pylint: disable=unexpected-keyword-arg
     prog='litemake', description=__description__,
     exit_on_error=False,
     usage='litemake [options] target(s)...'
