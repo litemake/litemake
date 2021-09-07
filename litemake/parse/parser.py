@@ -9,8 +9,10 @@ from .templates import Template
 from .endpoints import (
     StringTemplate as String,
     FolderPathTemplate as FolderPath,
+    RelFolderPathTemplate as RelFolderPath,
     IntegerTemplate as Integer,
     ListTemplate as ListOf,
+    DictTemplate as Dict,
 )
 
 from litemake.exceptions import (
@@ -66,6 +68,23 @@ class SetupConfigParser:
 
                 standard=String(min_len=1),
                 # TODO: a list of supported standards.
+            ),
+        ),
+
+        # TODO: custom error message when no targets provided
+        target=Dict(
+            min_len=1,
+            keys=String(
+                min_len=1, max_len=30,
+                allowed_chars=NAME_CHARS,
+                no_repeating=SPECIAL_CHARS,
+                no_on_edges=SPECIAL_CHARS,
+            ),
+            values=Template(
+                sources=ListOf(
+                    min_len=1,
+                    listof=RelFolderPath(),
+                )
             ),
         ),
     )

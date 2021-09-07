@@ -1,7 +1,7 @@
 ''' /parse/endpoints.py - litemake - Alon Krymgand Osovsky (2021) '''
 
 import typing
-import os.path
+from os import path
 
 
 from litemake.exceptions import litemakeTemplateError
@@ -31,11 +31,11 @@ class StringTemplate(TemplateEndpoint):
         self.no_on_edges = no_on_edges
 
     def validate(self, value, fieldpath: typing.List[str]) -> str:
-        super().validate(value, fieldpath)
-        if value is MISSING:
+        if not self.required and value is MISSING:
             return self.default
 
         # validate type str
+        super().validate(value, fieldpath)
         self.assert_type(value, str, fieldpath)
 
         # validate string length
@@ -78,18 +78,38 @@ class StringTemplate(TemplateEndpoint):
         return value
 
 
-class FolderPathTemplate(TemplateEndpoint):
+class FolderPathTemplate(StringTemplate):
+
+    def __init__(self, default=MISSING):
+        super().__init__(min_len=1, default=default)
 
     def validate(self, value, fieldpath: typing.List[str]):
-        super().validate(value, fieldpath)
-        if value is MISSING:
+        if not self.required and value is MISSING:
             return self.default
 
-        self.assert_type(value, str, fieldpath)
+        super().validate(value, fieldpath)
 
-        if os.path.isfile(value):
+        if path.isfile(value):
             raise litemakeTemplateError(
                 fieldpath, f"File named {value!r} already exists")
+
+        return value
+
+
+class RelFolderPathTemplate(FolderPathTemplate):
+
+    def __init__(self, default=MISSING) -> None:
+        super().__init__(default=default)
+
+    def validate(self, value, fieldpath: typing.List[str]):
+        if not self.required and value is MISSING:
+            return self.default
+
+        super().validate(value, fieldpath)
+
+        if path.isabs(value):
+            raise litemakeTemplateError(
+                fieldpath, f"Path must be relative, not absolute ({value!r})")
 
         return value
 
@@ -106,10 +126,10 @@ class IntegerTemplate(TemplateEndpoint):
         self.range_max = range_max
 
     def validate(self, value, fieldpath: typing.List[str]):
-        super().validate(value, fieldpath)
-        if value is MISSING:
+        if not self.required and value is MISSING:
             return self.default
 
+        super().validate(value, fieldpath)
         self.assert_type(value, int, fieldpath)
 
         if self.range_min is not None:
@@ -139,10 +159,10 @@ class ListTemplate(TemplateEndpoint):
         self.max_len = max_len
 
     def validate(self, value, fieldpath: typing.List[str]):
-        super().validate(value, fieldpath)
-        if value is MISSING:
+        if not self.required and value is MISSING:
             return self.default
 
+        super().validate(value, fieldpath)
         self.assert_type(value, list, fieldpath)
 
         if self.min_len is not None:
@@ -185,10 +205,10 @@ class DictTemplate(TemplateEndpoint):
         self.max_len = max_len
 
     def validate(self, value, fieldpath: typing.List[str]):
-        super().validate(value, fieldpath)
-        if value is MISSING:
+        if not self.required and value is MISSING:
             return self.default
 
+        super().validate(value, fieldpath)
         self.assert_type(value, dict, fieldpath)
 
         if self.min_len is not None:
