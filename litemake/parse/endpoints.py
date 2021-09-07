@@ -1,4 +1,4 @@
-''' /parse/templates.py - litemake - Alon Krymgand Osovsky (2021) '''
+''' /parse/endpoints.py - litemake - Alon Krymgand Osovsky (2021) '''
 
 import os.path
 from abc import ABC, abstractmethod

@@ -1,7 +1,7 @@
 import pytest
 from tests.utils import PASS, FAIL
 
-from litemake.parse.templates import SetupStringArg
+from litemake.parse.endpoints import SetupStringArg
 
 
 class TestStringTemplates:

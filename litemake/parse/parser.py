@@ -4,7 +4,7 @@ import string
 import toml
 from toml import TomlDecodeError
 
-from .templates import (
+from .endpoints import (
     SetupArgTemplate,
     SetupStringArg as String,
     SetupFolderPathArg as FolderPath,
@@ -144,7 +144,7 @@ class SetupConfigParser:
                 raw = dict()
 
             if not isinstance(raw, dict):
-                # If the template is a dict, the user must provide a dic too.
+                # If the template is a dict, the user must provide a dict too.
                 # if the raw instance isn't a dict, we will raise an error!
                 raise litemakeConfigError(
                     self.filepath, path, 'Unexpected field')
