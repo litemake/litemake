@@ -11,6 +11,7 @@ from .endpoints import (
     FolderPathTemplate as FolderPath,
     RelFolderPathTemplate as RelFolderPath,
     IntegerTemplate as Integer,
+    BoolTemplate as Bool,
     ListTemplate as ListOf,
     DictTemplate as Dict,
 )
@@ -81,10 +82,11 @@ class SetupConfigParser:
                 no_on_edges=SPECIAL_CHARS,
             ),
             values=Template(
+                library=Bool(default=False),
                 sources=ListOf(
                     min_len=1,
                     listof=RelFolderPath(),
-                )
+                ),
             ),
         ),
     )

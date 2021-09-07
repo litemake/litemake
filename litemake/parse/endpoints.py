@@ -145,6 +145,17 @@ class IntegerTemplate(TemplateEndpoint):
         return value
 
 
+class BoolTemplate(TemplateEndpoint):
+
+    def validate(self, value, fieldpath: typing.List[str]):
+        if not self.required and value is MISSING:
+            return self.default
+
+        super().validate(value, fieldpath)
+        self.assert_type(value, bool, fieldpath)
+        return value
+
+
 class ListTemplate(TemplateEndpoint):
 
     def __init__(self,
