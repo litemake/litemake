@@ -1,20 +1,21 @@
 import pytest
 from tests.utils import PASS, FAIL
 
-from litemake.parse.endpoints import SetupStringArg
+from litemake.parse.endpoints import StringTemplate
+from litemake.exceptions import litemakeTemplateError
 
 
 class TestStringTemplates:
 
     def _test_string_arg(self, value, expected, **build):
-        t = SetupStringArg(**build)
+        t = StringTemplate(**build)
 
         if expected == PASS:
-            t.validate(value)
+            t.validate(value, fieldpath=list())
 
         else:
-            with pytest.raises(AssertionError):
-                t.validate(value)
+            with pytest.raises(litemakeTemplateError):
+                t.validate(value, fieldpath=list())
 
     @pytest.mark.parametrize('value, expected', [
         ('hello', PASS),
