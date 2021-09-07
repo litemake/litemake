@@ -11,6 +11,23 @@ class litemakeError(Exception):
         Printer.error('\n'.join(self.msg))
 
 
+class litemakeTemplateError(litemakeError):
+    """ Raised when there is an error in the litemake setup configuration
+    file. """
+
+    def __init__(self, fieldpath: typing.List[str], error: str):
+        self.fieldpath = fieldpath
+        self.error = error
+
+        super().__init__(
+            '*template error:*',
+            f'Under field {".".join(fieldpath)!r} - {error}',
+        )
+
+    def to_config_error(self, filename: str) -> 'litemakeConfigError':
+        return litemakeConfigError(filename, self.fieldpath, self.error)
+
+
 class litemakeConfigError(litemakeError):
     """ Raised when there is an error in the litemake setup configuration
     file. """
