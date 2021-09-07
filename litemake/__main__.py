@@ -5,9 +5,12 @@ import sys
 
 from . import __description__, __version__, __litemake_spec__
 from .printer import litemakePrinter as Printer
-from .exceptions import litemakeError
 from .parse import SetupConfigParser as Parser
 from .compile import litemakeCompiler as Compiler
+from .exceptions import (
+    litemakeError,
+    litemakeUnknownTargetsError,
+)
 
 parser = argparse.ArgumentParser(  # pylint: disable=unexpected-keyword-arg
     prog='litemake', description=__description__,
@@ -52,12 +55,18 @@ def make(args):
         srcext=parser.config['litemake']['srcext'],
     )
 
-    targets = args.targets
+    targets = set(args.targets)
     if len(targets) == 0:
         first = next(iter(parser.config['target']))
         targets = [first]
         Printer.warning(
             f'*no explicit target:* executing first target {first!r}')
+
+    known_targets = set(parser.config['target'].keys())
+    unknown_targets = targets - known_targets
+
+    if unknown_targets:
+        raise litemakeUnknownTargetsError(unknown_targets)
 
 
 def main():

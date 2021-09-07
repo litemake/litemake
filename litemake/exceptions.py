@@ -82,6 +82,16 @@ class litemakeCompilationError(litemakeError):
         )
 
 
+class litemakeUnknownTargetsError(litemakeError):
+    """ Raised by '__main__.py' if the user want to execute a target that is not
+    specified in the configuration file. """
+
+    def __init__(self, targets: typing.Set[str]):
+        title = 'targets' if len(targets) > 1 else 'target'
+        targets_str = ', '.join(repr(t_) for t_ in targets)
+        super().__init__(f'*unknown {title}:* {targets_str}')
+
+
 class litemakeNoSourcesWarning(litemakeWarning):
     """ Raised by the compiler when there are zero files that match the
     requested source files pattern. """
