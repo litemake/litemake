@@ -65,7 +65,7 @@ class litemakePrinter:
 
     @classmethod
     def warning(cls, warning: str) -> None:
-        special = f'{Color.BOLD}{Color.MAGENTA}%s{Color.RESET}'
+        special = f'{Color.BOLD}{Color.YELLOW}%s{Color.RESET}'
         warning = cls.replace_special(warning, special)
         cls.print(warning)
 
