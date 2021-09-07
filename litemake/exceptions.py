@@ -2,6 +2,10 @@ import typing
 from .printer import litemakePrinter as Printer
 
 
+def stringify_fieldpath(path: list) -> str:
+    return '.'.join(str(p) for p in path)
+
+
 class litemakeError(Exception):
 
     def __init__(self, *msg: str):
@@ -21,7 +25,7 @@ class litemakeTemplateError(litemakeError):
 
         super().__init__(
             '*template error:*',
-            f'Under field {".".join(fieldpath)!r} - {error}',
+            f'Under field {stringify_fieldpath(fieldpath)!r} - {error}',
         )
 
     def to_config_error(self, filename: str) -> 'litemakeConfigError':
@@ -35,7 +39,7 @@ class litemakeConfigError(litemakeError):
     def __init__(self, filename: str, fieldpath: typing.List[str], msg: str):
         super().__init__(
             f'*configuration error in {filename!r}:*',
-            f'Under field {".".join(fieldpath)!r} - {msg}',
+            f'Under field {stringify_fieldpath(fieldpath)!r} - {msg}',
         )
 
 

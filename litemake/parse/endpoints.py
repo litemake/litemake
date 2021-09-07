@@ -180,7 +180,7 @@ class ListTemplate(TemplateEndpoint):
         new = list()
         for index, item in enumerate(value):
             new.append(
-                self.listof.validate(item, fieldpath + [str(index)])
+                self.listof.validate(item, fieldpath + [index])
             )
 
         return new
