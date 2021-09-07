@@ -1,7 +1,7 @@
 ifeq ($(OS), Windows_NT)
-	PY := py
+	PY ?= py
 else
-	PY := python3
+	PY ?= python3
 endif
 
 install:
