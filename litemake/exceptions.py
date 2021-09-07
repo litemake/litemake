@@ -15,6 +15,14 @@ class litemakeError(Exception):
         Printer.error('\n'.join(self.msg))
 
 
+class litemakeWarning(Exception):
+    def __init__(self, *msg: str):
+        self.msg = msg
+
+    def print(self,) -> None:
+        Printer.warning('\n'.join(self.msg))
+
+
 class litemakeTemplateError(litemakeError):
     """ Raised when there is an error in the litemake setup configuration
     file. """
@@ -72,3 +80,8 @@ class litemakeCompilationError(litemakeError):
             f'*error while calling {subprocess!r}:*',
             error_msg,
         )
+
+
+class litemakeNoSourcesWarning(litemakeWarning):
+    """ Raised by the compiler when there are zero files that match the
+    requested source files pattern. """

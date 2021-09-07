@@ -2,8 +2,13 @@ import typing
 
 import subprocess
 from os import path, makedirs, listdir
+from glob import glob
 
-from .exceptions import litemakeCompilationError
+from .exceptions import (
+    litemakeCompilationError,
+    litemakeNoSourcesWarning,
+)
+
 from .printer import litemakePrinter as Printer
 
 
@@ -106,5 +111,26 @@ class litemakeCompiler:
 
             elif path.isdir(cur):
                 compiled += self.compile_folder(cur)
+
+        return compiled
+
+    def compile_globs(self, globs: typing.List[str]) -> int:
+        """ Recives a list of globs. Extracts all files that match the patterns,
+        and compiles them. If zero files match the given patterns, an warning
+        is raised. Returns the number of compiled files. """
+
+        files = [
+            file
+            for g in globs
+            for file in glob(g, recursive=True)
+            if path.isfile(file)
+        ]
+
+        if len(files) == 0:
+            raise litemakeNoSourcesWarning()
+
+        compiled = 0
+        for file in files:
+            compiled += self.compile_file(file)
 
         return compiled
