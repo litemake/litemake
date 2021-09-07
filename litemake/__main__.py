@@ -58,7 +58,7 @@ def make(args):
     targets = set(args.targets)
     if len(targets) == 0:
         first = next(iter(parser.config['target']))
-        targets = [first]
+        targets = {first}
         Printer.warning(
             f'*no explicit target:* executing first target {first!r}')
 
