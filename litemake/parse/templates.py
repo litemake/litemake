@@ -92,8 +92,9 @@ class SetupFolderPathArg(SetupArgTemplate):
 
     def validate(self, value):
         self.assert_type(value, str)
-        assert os.path.isfile(value), f"A file named {value!r} already exists"
-        return os.path.abspath(value)
+        assert not os.path.isfile(
+            value), f"A file named {value!r} already exists"
+        return value
 
 
 class SetupIntegerArg(SetupArgTemplate):
