@@ -1,6 +1,7 @@
 import traceback
 import argparse
 import sys
+from os import path
 
 
 from . import __description__, __version__, __litemake_spec__
@@ -12,6 +13,7 @@ from .exceptions import (
     litemakeError,
     litemakeUnknownTargetsError,
 )
+
 
 parser = argparse.ArgumentParser(  # pylint: disable=unexpected-keyword-arg
     prog='litemake', description=__description__,
@@ -33,6 +35,13 @@ parser.add_argument(
     default=DEFAULT_SETUP_FILENAME,
 )
 parser.add_argument(
+    '-d', '--directory', action='store',
+    help='The directory in which litemake will run. By default, it is the ' +
+    'current working directory.',
+    type=str,
+    default='.',
+)
+parser.add_argument(
     '--no-verbose', action='store_true', default=False,
     help="disables printing of commands executed by 'litemake'. " +
     "Error messages and 'litemake' summary message will still be printed.",
@@ -46,10 +55,10 @@ def version():
 
 
 def make(args):
-    parser = Parser(args.file)
+    parser = Parser(path.join(args.directory, args.file))
 
     compiler = Compiler(
-        src='.',
+        src=args.directory,
         dest=parser.config['litemake']['output'],
         compiler=parser.config['litemake']['compiler'],
         flags=parser.config['litemake']['flags'],
