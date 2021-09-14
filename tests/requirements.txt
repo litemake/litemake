@@ -1,2 +1,3 @@
-pytest>=6.0.0
-pytest-cov>=2.12.0
+pytest>=6.0.0           # Testing framework
+pytest-cov>=2.12.0      # For coverage reports
+pytest-randomly>=3.9    # Randomly order tests
