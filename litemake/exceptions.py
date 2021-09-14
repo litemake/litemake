@@ -45,6 +45,10 @@ class litemakeConfigError(litemakeError):
     file. """
 
     def __init__(self, filename: str, fieldpath: typing.List[str], msg: str):
+        self.filename = filename
+        self.fieldpath = fieldpath
+        self.raw_msg = msg
+
         super().__init__(
             f'*configuration error in {filename!r}:*',
             f'Under field {stringify_fieldpath(fieldpath)!r} - {msg}',
