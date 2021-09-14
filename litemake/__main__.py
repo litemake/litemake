@@ -4,6 +4,7 @@ import sys
 
 
 from . import __description__, __version__, __litemake_spec__
+from .constants import DEFAULT_SETUP_FILENAME
 from .printer import litemakePrinter as Printer
 from .parse import SetupConfigParser as Parser
 from .compile import litemakeCompiler as Compiler
@@ -18,6 +19,7 @@ parser = argparse.ArgumentParser(  # pylint: disable=unexpected-keyword-arg
     usage='litemake [options] target(s)...'
 )
 
+# TODO: implement custom argparser
 parser.add_argument(
     '--version', action='store_true',
     help="show litemake's version number and exit")
@@ -28,7 +30,7 @@ parser.add_argument(
     '-f', '--file', action='store',
     help='litemake setup file',
     type=str,
-    default='setup.litemake.toml',
+    default=DEFAULT_SETUP_FILENAME,
 )
 parser.add_argument(
     '--no-verbose', action='store_true', default=False,
