@@ -1,5 +1,5 @@
 import pytest
-from .conftest import VirtualProject
+from tests.utils import VirtualProject
 
 from litemake import exceptions
 

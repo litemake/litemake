@@ -1,10 +1,8 @@
-import pytest
-
-import os.path
-from inspect import cleandoc
-
-import litemake.exceptions
 from litemake.__main__ import parser, make
+import litemake.exceptions
+
+from inspect import cleandoc
+import os.path
 
 
 class VirtualProject:
@@ -31,12 +29,3 @@ class VirtualProject:
         # to run litemake inside the virtual project directory.
         args = ('-d', self.basepath) + args
         return make(parser.parse_args(args))
-
-
-@pytest.fixture
-def project(request, tmpdir_factory):
-    name = request.node.originalname
-    return VirtualProject(
-        name=name,
-        basepath=str(tmpdir_factory.mktemp(name)),
-    )
