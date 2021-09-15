@@ -40,8 +40,6 @@ class SetupConfigParser:
             ),
             compiler=String(default='g++'),
             flags=ListOf(String(min_len=1), default=list()),
-            # TODO: support for default factory. In this case, we use the
-            #       template only once each run, and thus it is "ok".
 
             meta=Template(
                 name=String(

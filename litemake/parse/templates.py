@@ -1,5 +1,6 @@
 import typing
 from abc import ABC, abstractmethod
+from copy import deepcopy
 
 from litemake.exceptions import litemakeTemplateError
 
@@ -85,7 +86,7 @@ class TemplateEndpoint(BaseTemplate):
             raise litemakeTemplateError(fieldpath, 'Missing required field')
 
         elif not self.required and value is MISSING:
-            return self.default
+            return deepcopy(self.default)
 
         else:
             return value
