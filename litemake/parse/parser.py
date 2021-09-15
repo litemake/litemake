@@ -32,12 +32,7 @@ class SetupConfigParser:
         litemake=Template(
             spec=Integer(range_min=0, default=0),
             output=FolderPath(default='./.litemake/'),
-            objext=String(default='.o'),
-            srcext=ListOf(
-                String(min_len=1),
-                min_len=1,
-                default=['.cpp', '.cc', '.c'],
-            ),
+            objsuffix=String(default='.o'),
             compiler=String(default='g++'),
             flags=ListOf(String(min_len=1), default=list()),
 

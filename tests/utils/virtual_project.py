@@ -41,5 +41,5 @@ class VirtualProject:
     def make(self, *args):
         # By default, the virtual project class adds the '-d' argument
         # to run litemake inside the virtual project directory.
-        args = ('-d', self.basepath) + args
+        args = (f'-d{self.basepath}',) + args
         return make(parser.parse_args(args))

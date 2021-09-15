@@ -62,8 +62,7 @@ def make(args):
         dest=parser.config['litemake']['output'],
         compiler=parser.config['litemake']['compiler'],
         flags=parser.config['litemake']['flags'],
-        objext=parser.config['litemake']['objext'],
-        srcext=parser.config['litemake']['srcext'],
+        objsuffix=parser.config['litemake']['objsuffix'],
     )
 
     targets = set(args.targets)

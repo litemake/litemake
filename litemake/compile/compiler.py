@@ -17,15 +17,13 @@ class litemakeCompiler:
                  dest: str,
                  compiler: str,
                  flags: typing.List[str],
-                 objext: str,
-                 srcext: str,
+                 objsuffix: str,
                  ) -> None:
         self.src = src
         self.dest = dest
         self.compiler = compiler
         self.flags = flags
-        self.objext = objext
-        self.srcext = srcext
+        self.objsuffix = objsuffix
 
     def _compile(self, *args: typing.List[str]) -> None:
         """ Recives a list of strings that represents a command arguments.
@@ -54,19 +52,15 @@ class litemakeCompiler:
         dest_dir = path.join(self.dest, rel_dir)
 
         filename = path.basename(filepath)
-        name, _ = path.splitext(filename)
+        return path.join(dest_dir, filename + self.objsuffix)
 
-        return path.join(dest_dir, name + self.objext)
-
-    def compile_obj(self, filepath: str) -> None:
-
-        dest = self.src_to_obj_path(filepath)
+    def compile_obj(self, src: str, dest: str) -> None:
         makedirs(path.dirname(dest), exist_ok=True)
 
         # TODO: To support less popular compilers, add the template command
         #       to the configuration setup file, instead of hardcoding '-c'
         #       and '-o' options.
-        self._compile('-c', filepath, '-o', dest)
+        self._compile('-c', src, '-o', dest)
         litemakeCompiler.compiled += 1
 
     def compile_file(self, filepath: str) -> bool:
@@ -75,10 +69,6 @@ class litemakeCompiler:
         returns `True`. If the file isn't compiled, the returned value is
         `False`. """
 
-        if not any(filepath.endswith(ext) for ext in self.srcext):
-            # This is not a source file -> nothing to compile! -> exit
-            return False
-
         dest = self.src_to_obj_path(filepath)
 
         if not path.exists(dest) or path.getmtime(filepath) > path.getmtime(dest):
@@ -86,10 +76,6 @@ class litemakeCompiler:
             # Case 2: If the source file is newer then the compiled one, we need
             #         to recompile.
 
-            # TODO: in this case, the 'src_to_obj_path' function will be called
-            #       twice (first time here, and second time in the 'compile_obj'
-            #       function). It is possible to cache the result using the
-            #       'cache' decorator, or pass the path as a parameter.
-            self.compile_obj(filepath)
+            self.compile_obj(filepath, dest)
             return True
         return False
