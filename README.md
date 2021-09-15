@@ -1,5 +1,10 @@
 # litemake
 
+<!-- Badges -->
+[![build](https://img.shields.io/github/workflow/status/litemake/litemake/%E2%9C%85%EF%B8%8F%20Test?logo=github)](https://github.com/litemake/litemake/actions/workflows/test.yaml)
+[![codecov](https://img.shields.io/codecov/c/github/litemake/litemake?logo=codecov)](https://codecov.io/gh/litemake/litemake)
+
+<!-- Short description -->
 A new way to build, test and distribute your C/C++ projects and libraries.
 
 ## What is litemake?
@@ -43,4 +48,3 @@ Furthermore, with tools like [nanotest] you will be able to automatically build 
 [nanotest]: link/to/nanotest
 
 [1]: https://api.csswg.org/bikeshed/?force=1&url=https://raw.githubusercontent.com/vector-of-bool/pitchfork/develop/data/spec.bs#intro
-
