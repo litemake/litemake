@@ -35,11 +35,16 @@ def test_non_existing_folder_path(path: str, project: VirtualProject):
     FolderPathTemplate().validate(path, list())
 
 
-def test_file_instead_of_folder(project: VirtualProject):
-    """ Tests that the folder template supports a path to an existing
-    folder. """
+@pytest.mark.parametrize('filepath, filecontent', (
+    ('somefile.txt', 'Hello, world!'),
+))
+def test_file_instead_of_folder(project: VirtualProject,
+                                filepath: str,
+                                filecontent: str,
+                                ) -> None:
+    """ Tests that the folder template supports a path to an existing folder. """
 
-    path = project.add_file('somefile.txt', 'Hello, world!')
+    path = project.add_file(filepath, filecontent)
     template = FolderPathTemplate()
 
     with pytest.raises(litemakeTemplateError) as err:
