@@ -36,3 +36,28 @@ jobs:
 
       - name: Test 🎯
         run: make test
+
+  cov:
+    name: 🏆️ Upload Coverage Report
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: Clone 👀
+        uses: actions/checkout@v2
+
+      - name: Setup Python 🐍
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+
+      - name: Install 📌
+        run: make develop
+
+      - name: Generate Report 🏗️
+        run: make cov
+
+      - name: Upload Report 🙃
+        uses: codecov/codecov-action@v2
+        with:
+          fail_ci_if_error: true
+          token: ${{ secrets.CODECOV_TOKEN }}
