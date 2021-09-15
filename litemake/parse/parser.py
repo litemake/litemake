@@ -79,7 +79,11 @@ class SetupConfigParser:
                 library=Bool(default=False),
                 sources=ListOf(
                     min_len=1,
-                    listof=RelFolderPath(),
+                    listof=String(min_len=1),
+                ),
+                include=ListOf(
+                    default=list(),
+                    listof=RelFolderPath(must_exist=True),
                 ),
             ),
         ),
