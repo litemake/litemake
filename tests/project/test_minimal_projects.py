@@ -1,12 +1,6 @@
 import pytest
-from tests.utils import VirtualProject
-
 from litemake import exceptions
-
-
-def matching_msg(expected: str, got: str) -> bool:
-    expected, got = expected.lower(), got.lower()
-    return got in expected
+from tests.utils import VirtualProject, matching_msg
 
 
 def test_setup_file_not_found_error(project: VirtualProject):
