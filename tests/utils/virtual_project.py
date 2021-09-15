@@ -13,16 +13,18 @@ class VirtualProject:
         self.name = name
         self.basepath = basepath
 
-    def add_file(self, path: str, content: str) -> None:
+    def add_file(self, path: str, content: str) -> str:
         assert not os.path.isabs(path), "A relative path isn't allowed here"
         path = os.path.join(self.basepath, path)
 
         with open(path, 'w', encoding='utf8') as file:
             file.write(cleandoc(content))
 
-    def add_setup(self, content: str, path: str = None):
+        return path
+
+    def add_setup(self, content: str, path: str = None) -> str:
         path = path or litemake.constants.DEFAULT_SETUP_FILENAME
-        self.add_file(path, content)
+        return self.add_file(path, content)
 
     def make(self, *args):
         # By default, the virtual project class adds the '-d' argument
