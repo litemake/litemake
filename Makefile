@@ -8,6 +8,10 @@ install:
 	$(PY) -m pip install --upgrade pip
 	$(PY) -m pip install .
 
+install-compilers:
+	sudo apt-get update
+	sudo apt install clang llvm gcc g++
+
 develop:
 	$(PY) -m pip install --upgrade pip
 	$(PY) -m pip install -e .[dev]
@@ -19,4 +23,4 @@ cov:
 	$(PY) -m pytest --cov litemake/ --cov-report xml --cov-report term
 
 
-.PHONY: intall develop test cov
+.PHONY: intall install-compilers develop test cov
