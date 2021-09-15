@@ -28,6 +28,12 @@ class VirtualProject:
         # return path to new created file
         return path
 
+    def add_dir(self, path: str) -> str:
+        assert not os.path.isabs(path), "relative path is required"
+        dirpath = os.path.join(self.basepath, path)
+        os.makedirs(dirpath, exist_ok=True)
+        return dirpath
+
     def add_setup(self, content: str, path: str = None) -> str:
         path = path or litemake.constants.DEFAULT_SETUP_FILENAME
         return self.add_file(path, content)
