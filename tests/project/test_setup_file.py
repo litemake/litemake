@@ -29,7 +29,7 @@ def test_minimal_setup_file(project: VirtualProject):
     project.make()
 
 
-def test_missing_name(project: VirtualProject):
+def test_missing_name_in_setup_file(project: VirtualProject):
     """ Tests if an appropriate error message is provided when the setup file
     is missing the 'litemake.meta.name' field. """
 
@@ -50,7 +50,7 @@ def test_missing_name(project: VirtualProject):
     assert matching_msg('missing required field', err.value.raw_msg)
 
 
-def test_missing_standard(project: VirtualProject):
+def test_missing_standard_in_setup_file(project: VirtualProject):
     """ Tests if an appropriate error message is provided when the setup file
     is missing the 'litemake.meta.standard' field. """
 
@@ -86,7 +86,7 @@ def test_missing_standard(project: VirtualProject):
     [target]
     ''',
 ))
-def test_missing_target(project: VirtualProject, setup: str):
+def test_missing_target_in_setup_file(project: VirtualProject, setup: str):
     """ Tests if an appropriate error message is provided when the setup file
     has no targets specified. """
 
