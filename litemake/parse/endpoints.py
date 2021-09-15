@@ -217,7 +217,7 @@ class DictTemplate(TemplateEndpoint):
 
     def validate(self, value, fieldpath: typing.List[str]):
         if not self.required and value is MISSING:
-            return self.default
+            value = self.default
 
         super().validate(value, fieldpath)
         self.assert_type(value, dict, fieldpath)

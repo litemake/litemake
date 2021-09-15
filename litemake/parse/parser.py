@@ -74,6 +74,7 @@ class SetupConfigParser:
 
         # TODO: custom error message when no targets provided
         target=Dict(
+            default=dict(),
             min_len=1,
             keys=String(
                 min_len=1, max_len=30,
