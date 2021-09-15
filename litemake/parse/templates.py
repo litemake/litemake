@@ -75,5 +75,17 @@ class TemplateEndpoint(BaseTemplate):
         self.default = default
 
     def validate(self, value, fieldpath: typing.List[str]):
+        """ Validates that the given value is provided if required by the
+        template, and if not provided -> raises an exception.
+        If the value isn't provided but also isn't required, return the
+        default value that is provided by the template. Otherwise, returns
+        the given value. """
+
         if self.required and value is MISSING:
             raise litemakeTemplateError(fieldpath, 'Missing required field')
+
+        elif not self.required and value is MISSING:
+            return self.default
+
+        else:
+            return value

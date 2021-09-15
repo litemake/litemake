@@ -51,8 +51,8 @@ class SetupConfigParser:
                     no_on_edges=SPECIAL_CHARS,
                 ),
 
-                description=String(max_len=200, default=None),
-                author=String(max_len=200, default=None),
+                description=String(max_len=200, default=str()),
+                author=String(max_len=200, default=str()),
                 # TODO: add metadata fields: email, url(s)
 
                 version=Template(
