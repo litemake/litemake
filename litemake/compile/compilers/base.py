@@ -24,14 +24,22 @@ class AbstractCompiler(ABC):
             )
 
     @abstractmethod
-    def create_obj(self, src: str, dest: str):
+    @property
+    @staticmethod
+    def name(self) -> str:
+        """ Return a string that represents the compiler class. Typically,
+        the name will also be the first command line argument when calling
+        the compiler. """
+
+    @abstractmethod
+    def create_obj(self, src: str, dest: str) -> None:
         """ Compile the given source C/C++ file into a object file. """
 
     @abstractmethod
-    def create_archive(self, dest: str, objs: typing.List[str]):
+    def create_archive(self, dest: str, objs: typing.List[str]) -> None:
         """ Combine the given object files into a single archive (static
         library) file. """
 
     @abstractmethod
-    def create_exectutable(self, dest: str, archives: typing.List[str]):
-        """ Combine multiple archives into a single exectutable. """
+    def create_executable(self, dest: str, archives: typing.List[str]) -> None:
+        """ Combine multiple archives into a single executable. """
