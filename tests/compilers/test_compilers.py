@@ -9,6 +9,7 @@ from tests.utils import VirtualProject
 
 from litemake.compile.compilers import (
     AbstractCompiler,
+    Compiler,
     ClangCompiler,
     ClangplusplusCompiler,
     GccCompiler,
@@ -16,7 +17,7 @@ from litemake.compile.compilers import (
 )
 
 
-class _TestCompiler:
+class _TestCompiler(ABC):
 
     @property
     @classmethod
@@ -85,19 +86,19 @@ def skip_if_missing_clis(compiler: AbstractCompiler):
 
 @skip_if_missing_clis(GccCompiler)
 class TestGccCompiler(_TestCompiler):
-    COMPILER = GccCompiler()
+    COMPILER = Compiler('gcc')
 
 
 @skip_if_missing_clis(GplusplusCompiler)
 class TestGplusplusCompiler(_TestCompiler):
-    COMPILER = GplusplusCompiler()
-
-
-@skip_if_missing_clis(ClangplusplusCompiler)
-class TestClangplusplusCompiler(_TestCompiler):
-    COMPILER = ClangplusplusCompiler()
+    COMPILER = Compiler('g++')
 
 
 @skip_if_missing_clis(ClangCompiler)
 class TestClangCompiler(_TestCompiler):
-    COMPILER = ClangCompiler()
+    COMPILER = Compiler('clang')
+
+
+@skip_if_missing_clis(ClangplusplusCompiler)
+class TestClangplusplusCompiler(_TestCompiler):
+    COMPILER = Compiler('clang++')

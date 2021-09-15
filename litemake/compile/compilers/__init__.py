@@ -1,15 +1,11 @@
 from .base import AbstractCompiler
+from .generator import COMPILERS, Compiler
 from .gnu import GccCompiler, GplusplusCompiler
 from .llvm import ClangCompiler, ClangplusplusCompiler
 
-COMPILERS = {
-    compiler.name: compiler
-    for compiler in
-    {GccCompiler, GplusplusCompiler, ClangCompiler, ClangplusplusCompiler}
-}
-
 __all__ = [
-    'AbstractCompiler', 'COMPILERS',
+    'AbstractCompiler',
+    'COMPILERS', 'Compiler',
     'GccCompiler', 'GplusplusCompiler',
     'ClangCompiler', 'ClangplusplusCompiler'
 ]
