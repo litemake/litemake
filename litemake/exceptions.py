@@ -8,8 +8,9 @@ def stringify_fieldpath(path: list) -> str:
 
 class litemakeError(Exception):
 
-    def __init__(self, *msg: str):
+    def __init__(self, *msg: str, raw_msg: str = None):
         self.msg = msg
+        self.raw_msg = raw_msg
 
     def print(self,) -> None:
         Printer.error('\n'.join(self.msg))
@@ -27,17 +28,17 @@ class litemakeTemplateError(litemakeError):
     """ Raised when there is an error in the litemake setup configuration
     file. """
 
-    def __init__(self, fieldpath: typing.List[str], error: str):
+    def __init__(self, fieldpath: typing.List[str], msg: str):
         self.fieldpath = fieldpath
-        self.error = error
 
         super().__init__(
             '*template error:*',
-            f'Under field {stringify_fieldpath(fieldpath)!r} - {error}',
+            f'Under field {stringify_fieldpath(fieldpath)!r} - {msg}',
+            raw_msg=msg,
         )
 
     def to_config_error(self, filename: str) -> 'litemakeConfigError':
-        return litemakeConfigError(filename, self.fieldpath, self.error)
+        return litemakeConfigError(filename, self.fieldpath, self.raw_msg)
 
 
 class litemakeConfigError(litemakeError):
@@ -47,11 +48,11 @@ class litemakeConfigError(litemakeError):
     def __init__(self, filename: str, fieldpath: typing.List[str], msg: str):
         self.filename = filename
         self.fieldpath = fieldpath
-        self.raw_msg = msg
 
         super().__init__(
             f'*configuration error in {filename!r}:*',
             f'Under field {stringify_fieldpath(fieldpath)!r} - {msg}',
+            raw_msg=msg,
         )
 
 
@@ -63,6 +64,7 @@ class litemakeParsingError(litemakeError):
         super().__init__(
             f'*parsing error in {filename}:*',
             f'On line {line}, column {col} - {msg}',
+            raw_msg=msg,
         )
 
 
@@ -79,10 +81,10 @@ class litemakeCompilationError(litemakeError):
     """ Raised by the 'compiler' object if when calling the compiler (gcc, g++,
     clang), it returned a non-zero code. """
 
-    def __init__(self, subprocess: str, error_msg: str):
+    def __init__(self, subprocess: str, msg: str):
         super().__init__(
             f'*error while calling {subprocess!r}:*',
-            error_msg,
+            msg,
         )
 
 
@@ -91,8 +93,11 @@ class litemakeUnknownTargetsError(litemakeError):
     specified in the configuration file. """
 
     def __init__(self, targets: typing.Set[str]):
+        self.targets = targets
+
         title = 'targets' if len(targets) > 1 else 'target'
         targets_str = ', '.join(repr(t_) for t_ in targets)
+
         super().__init__(f'*unknown {title}:* {targets_str}')
 
 
