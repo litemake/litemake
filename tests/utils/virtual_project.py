@@ -14,12 +14,18 @@ class VirtualProject:
         self.basepath = basepath
 
     def add_file(self, path: str, content: str) -> str:
-        assert not os.path.isabs(path), "A relative path isn't allowed here"
+        assert not os.path.isabs(path), "relative path is required"
         path = os.path.join(self.basepath, path)
 
+        # Create folders (recursively) on path to file
+        dirpath = os.path.dirname(path)
+        os.makedirs(dirpath, exist_ok=True)
+
+        # Write content to file
         with open(path, 'w', encoding='utf8') as file:
             file.write(cleandoc(content))
 
+        # return path to new created file
         return path
 
     def add_setup(self, content: str, path: str = None) -> str:
