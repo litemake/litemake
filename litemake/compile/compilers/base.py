@@ -23,13 +23,20 @@ class AbstractCompiler(ABC):
                 msg=result.stderr,
             )
 
-    @abstractmethod
     @property
     @staticmethod
+    @abstractmethod
     def name(self) -> str:
         """ Return a string that represents the compiler class. Typically,
         the name will also be the first command line argument when calling
         the compiler. """
+
+    @property
+    @staticmethod
+    @abstractmethod
+    def required_clis() -> typing.Set[str]:
+        """ Returns a list of strings that represent names of required CLIs
+        to run this compiler successfully. """
 
     @abstractmethod
     def create_obj(self, src: str, dest: str) -> None:

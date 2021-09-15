@@ -1,15 +1,15 @@
 from .base import AbstractCompiler
 from .gnu import GccCompiler, GplusplusCompiler
-from .llvm import ClangCompiler
+from .llvm import ClangCompiler, ClangplusplusCompiler
 
 COMPILERS = {
-    compiler.name(): compiler
+    compiler.name: compiler
     for compiler in
-    {GccCompiler, GplusplusCompiler, ClangCompiler}
+    {GccCompiler, GplusplusCompiler, ClangCompiler, ClangplusplusCompiler}
 }
 
 __all__ = [
     'AbstractCompiler', 'COMPILERS',
     'GccCompiler', 'GplusplusCompiler',
-    'ClangCompiler',
+    'ClangCompiler', 'ClangplusplusCompiler'
 ]

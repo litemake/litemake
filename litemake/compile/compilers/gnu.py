@@ -18,14 +18,10 @@ class GnuCompiler(AbstractCompiler):
 
 
 class GccCompiler(GnuCompiler):
-
-    @property
-    @staticmethod
-    def name(): return 'gcc'
+    name = 'gcc'
+    required_clis = {'gcc', 'ar'}
 
 
 class GplusplusCompiler(GnuCompiler):
-
-    @property
-    @staticmethod
-    def name(): return 'g++'
+    name = 'g++'
+    required_clis = {'g++', 'ar'}
