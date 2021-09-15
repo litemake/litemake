@@ -51,3 +51,13 @@ def test_file_instead_of_folder(project: VirtualProject,
         template.validate(path, list())
 
     assert matching_msg('already exists', err.value.raw_msg)
+
+
+@pytest.mark.parametrize('path', ('example/',))
+def test_must_exist_folder(project: VirtualProject, path: str) -> None:
+
+    folder = os.path.join(project.basepath, path)
+    with pytest.raises(litemakeTemplateError) as err:
+        FolderPathTemplate(must_exist=True).validate(folder, list())
+
+    assert matching_msg("doesn't exist", err.value.raw_msg)

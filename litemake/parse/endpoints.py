@@ -78,8 +78,9 @@ class StringTemplate(TemplateEndpoint):
 
 class FolderPathTemplate(StringTemplate):
 
-    def __init__(self, default=MISSING):
+    def __init__(self, must_exist: bool = False, default=MISSING):
         super().__init__(min_len=1, default=default)
+        self.must_exist = must_exist
 
     def validate(self, value, fieldpath: typing.List[str]):
         value = super().validate(value, fieldpath)
@@ -88,13 +89,17 @@ class FolderPathTemplate(StringTemplate):
             raise litemakeTemplateError(
                 fieldpath, f"File named {value!r} already exists")
 
+        if not path.exists(value) and self.must_exist:
+            raise litemakeTemplateError(
+                fieldpath, f"Folder {value!r} doesn't exist")
+
         return value
 
 
 class RelFolderPathTemplate(FolderPathTemplate):
 
-    def __init__(self, default=MISSING) -> None:
-        super().__init__(default=default)
+    def __init__(self, must_exist: bool = False, default=MISSING) -> None:
+        super().__init__(must_exist=must_exist, default=default)
 
     def validate(self, value, fieldpath: typing.List[str]):
         value = super().validate(value, fieldpath)
