@@ -18,23 +18,26 @@ class litemakeOutputFolder:
     def compiled_objects_dir(self):
         return self('objects/')
 
-    def library_id(self,
-                   name: str,
-                   version: typing.Tuple[int, int, int],
-                   ) -> str:
-        return f"{name}-v{':'.join(str(v) for v in version)}"
+    def target_id(self,
+                  package: str,
+                  target: str,
+                  version: typing.Tuple[int, int, int],
+                  ) -> str:
+        return f"{package}:{target}-v{':'.join(str(v) for v in version)}"
 
     def archive_path(self,
-                     name: str,
+                     package: str,
+                     target: str,
                      version: typing.Tuple[int, int, int],
                      ) -> str:
-        filename = self.library_id(name, version) + '.a'
+        filename = self.target_id(package, target, version) + '.a'
         return os.path.join(self.compiled_archives_dir, filename)
 
     def object_path(self,
-                    lib_name: str,
-                    lib_version: typing.Tuple[int, int, int],
+                    package: str,
+                    target: str,
+                    version: typing.Tuple[int, int, int],
                     relative_path: str,
                     ) -> str:
-        lib = self.library_id(lib_name, lib_version)
+        lib = self.target_id(package, target, version)
         return os.path.join(self.compiled_objects_dir, lib, relative_path)
