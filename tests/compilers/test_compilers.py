@@ -1,11 +1,13 @@
 import os
-import typing
 import subprocess
 from shutil import which
 from abc import ABC, abstractmethod
 
+import typing
+if typing.TYPE_CHECKING:
+    from tests.utils import VirtualProject
+
 import pytest
-from tests.utils import VirtualProject
 
 from litemake.compile.compilers import (
     AbstractCompiler,
@@ -17,7 +19,7 @@ from litemake.compile.compilers import (
 )
 
 
-class _TestCompiler(ABC):
+class _TestCompilerC(ABC):
 
     @property
     @classmethod
@@ -34,12 +36,12 @@ class _TestCompiler(ABC):
         result = subprocess.run(*cmd, capture_output=True, text=True)
         return result.returncode, result.stdout
 
-    def test_c_hello_world(self, project: VirtualProject):
+    def test_c_hello_world(self, project: 'VirtualProject'):
         """ A simple test that creates a file named 'main.c', and tries to
         compile it into an object file, then into an archive, and then into
         an executable using the supported compileres by litemake. """
 
-        obj_src = project.add_file('main.c', '''
+        src = project.add_file('main.c', '''
             #include <stdio.h>
 
             int main() {
@@ -50,7 +52,33 @@ class _TestCompiler(ABC):
         ''')
 
         obj_dest = os.path.join(project.basepath, 'main.o')
-        self.COMPILER.create_obj(obj_src, obj_dest)
+        self.COMPILER.create_obj(src, obj_dest)
+
+        arc_dest = os.path.join(project.basepath, 'main.a')
+        self.COMPILER.create_archive(arc_dest, [obj_dest])
+
+        out_dest = os.path.join(project.basepath, 'main.out')
+        self.COMPILER.create_executable(out_dest, [obj_dest])
+
+        code, out = self._execute_binary(out_dest)
+        assert code == 0, "Compiled program crashed unexpectedly"
+        assert out == 'Hello from litemake!\n', "Unexpected output from compiled program"
+
+
+class _TestCompilerCPP(_TestCompilerC):
+
+    def test_cpp_hello_world(self, project: 'VirtualProject'):
+        src = project.add_file('main.cpp', '''
+            #include <iostream>
+            
+            int main() {
+                std::cout << "Hello from litemake!" << std::endl;
+            }
+
+        ''')
+
+        obj_dest = os.path.join(project.basepath, 'main.o')
+        self.COMPILER.create_obj(src, obj_dest)
 
         arc_dest = os.path.join(project.basepath, 'main.a')
         self.COMPILER.create_archive(arc_dest, [obj_dest])
@@ -85,20 +113,20 @@ def skip_if_missing_clis(compiler: AbstractCompiler):
 
 
 @skip_if_missing_clis(GccCompiler)
-class TestGccCompiler(_TestCompiler):
+class TestGccCompiler(_TestCompilerC):
     COMPILER = Compiler('gcc')
 
 
 @skip_if_missing_clis(GplusplusCompiler)
-class TestGplusplusCompiler(_TestCompiler):
+class TestGplusplusCompiler(_TestCompilerCPP):
     COMPILER = Compiler('g++')
 
 
 @skip_if_missing_clis(ClangCompiler)
-class TestClangCompiler(_TestCompiler):
+class TestClangCompiler(_TestCompilerC):
     COMPILER = Compiler('clang')
 
 
 @skip_if_missing_clis(ClangplusplusCompiler)
-class TestClangplusplusCompiler(_TestCompiler):
+class TestClangplusplusCompiler(_TestCompilerCPP):
     COMPILER = Compiler('clang++')
