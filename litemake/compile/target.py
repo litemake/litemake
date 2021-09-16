@@ -3,7 +3,7 @@ import typing
 from glob import glob
 
 from .compilers import AbstractCompiler
-from .output import litemakeOutputFolder as OutputFolder
+from .output import OutputFolder
 from .graph import (
     ObjectFileNode,
     ArchiveFileNode,

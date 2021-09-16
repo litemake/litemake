@@ -2,7 +2,7 @@ import os
 import typing
 
 
-class litemakeOutputFolder:
+class OutputFolder:
 
     def __init__(self, basepath: str):
         self.basepath = basepath
