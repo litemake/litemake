@@ -39,10 +39,10 @@ jobs:
 
       - name: Test 🎯
         run: make cov
-        continue-on-error: true
 
       - name: Upload Coverage Report 🙃
         uses: codecov/codecov-action@v2
+        if: ${{ always() }}
         with:
           fail_ci_if_error: true
           token: ${{ secrets.CODECOV_TOKEN }}
