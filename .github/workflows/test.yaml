@@ -39,6 +39,7 @@ jobs:
 
       - name: Test 🎯
         run: make cov
+        continue-on-error: true
 
       - name: Upload Coverage Report 🙃
         uses: codecov/codecov-action@v2
