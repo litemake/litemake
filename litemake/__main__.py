@@ -8,7 +8,7 @@ from . import __description__, __version__, __litemake_spec__
 from .constants import DEFAULT_SETUP_FILENAME
 from .printer import litemakePrinter as Printer
 from .parse import SetupConfigParser as Parser
-from .compile import TargetCompiler, Compiler
+from .compile import TargetCompiler, Compiler, TargetsCollection
 from .exceptions import (
     litemakeError,
     litemakeUnknownTargetsError,
@@ -70,6 +70,21 @@ def make(args):
 
     if unknown_targets:
         raise litemakeUnknownTargetsError(unknown_targets)
+
+    litemake = parser.config['litemake']
+    version = litemake['meta']['version']
+    target_collection = TargetsCollection(
+        package=litemake['meta']['name'],
+        version=(version['major'], version['minor'], version['patch']),
+        basepath=args.directory,
+        compiler=compiler,
+    )
+
+    for name in targets:
+        target_collection.collect(
+            target=name,
+            sources=parser.config['target'][name]['sources'],
+        )
 
 
 def main():
