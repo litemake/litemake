@@ -77,7 +77,7 @@ class SetupConfigParser:
             values=Template(
                 library=Bool(default=False),
                 sources=ListOf(
-                    min_len=1,
+                    default=list(),
                     listof=String(min_len=1),
                 ),
                 include=ListOf(
