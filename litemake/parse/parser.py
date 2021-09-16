@@ -1,5 +1,6 @@
-import typing
+import os
 import string
+from functools import cached_property
 
 import toml
 from toml import TomlDecodeError
@@ -23,6 +24,12 @@ from litemake.exceptions import (
     litemakeTemplateError,
 )
 
+from litemake.compile import Compiler, TargetCompiler
+
+import typing
+if typing.TYPE_CHECKING:
+    from litemake.compile.compilers import AbstractCompiler
+
 
 class SetupConfigParser:
 
@@ -32,6 +39,7 @@ class SetupConfigParser:
     TEMPLATE = Template(
         litemake=Template(
             spec=IntegerTemplate(range_min=0, default=0),
+            home=FolderPathTemplate(default=os.getcwd()),
             output=FolderPathTemplate(default='./.litemake/'),
             compiler=CompilerTemplate(default='g++'),
 
@@ -89,11 +97,11 @@ class SetupConfigParser:
     )
 
     def __init__(self, filepath: str):
-        self.filepath = filepath
+        self._filepath = filepath
 
         try:
             with open(filepath, mode='r', encoding='utf8') as file:
-                self.raw = toml.load(file)
+                self._raw = toml.load(file)
 
         except FileNotFoundError:
             raise litemakeSetupFileNotFoundError(filepath) from None
@@ -107,7 +115,89 @@ class SetupConfigParser:
             ) from None
 
         try:
-            self.config = self.TEMPLATE.validate(self.raw, fieldpath=list())
+            self._config = self.TEMPLATE.validate(self.raw, fieldpath=list())
 
         except litemakeTemplateError as err:
             raise err.to_config_error(filepath)
+
+    @property
+    def config(self,):
+        """ For backwards compatability. Should be erased in the next few
+        commits. """
+        return self._config
+
+    @property
+    def raw(self,):
+        """ For backwards compatability. Should be erased in the next few
+        commits. """
+        return self._raw
+
+    @property
+    def filepath(self,) -> str:
+        """ The path to this configuration file. """
+        return self._filepath
+
+    @property
+    def homepath(self,) -> str:
+        return self._config['litemake']['home']
+
+    @property
+    def package_name(self,) -> str:
+        """ The name of the current package, as a string. """
+        return self._config['litemake']['meta']['name']
+
+    @property
+    def package_description(self,) -> str:
+        """ A sentence or two that describe the package, as a string. """
+        return self._config['litemake']['meta']['description']
+
+    @property
+    def package_author(self,) -> str:
+        """ The name of the author of the package, as a string. """
+        return self._config['litemake']['meta']['author']
+
+    @property
+    def package_version(self,) -> typing.Tuple[int, int, int, str]:
+        """ A tuple that represents the current version of the package.
+        The first 3 values in the tuple are positive integers that represent
+        the version number following the Semantic Versioning convention
+        (https://semver.org/), while the 4th item in the tuple is a short
+        string that adds information about the version (for example, 'alpha',
+        'experimental', etc). """
+
+        ver_dict = self._config['litemake']['meta']['version']
+        return (ver_dict['major'], ver_dict['minor'], ver_dict['patch'], ver_dict['label'])
+
+    @cached_property
+    def compiler(self,) -> 'AbstractCompiler':
+        """ A compiler instance that is configured as specified in the setup
+        file. """
+        return self._config['litemake']['compiler']
+
+    @property
+    def target_names(self,) -> typing.Set[str]:
+        """ A set of strings. Each string is a name of a target that is specified
+        in the configuration file. """
+        return set(self._config['target'])
+
+    @property
+    def target_compilers(self,) -> typing.Dict[str, 'TargetCompiler']:
+        """ A dictionary where the keys are names of targets specified in the
+        configuration file, and values are instances of 'TargetCompiler' that
+        contain information about the target and can compile/make it. """
+
+        return {
+            name: TargetCompiler(
+                package=self.package_name,
+                version=self.package_version,
+                target=name,
+                basepath=self.homepath,
+                compiler=self.compiler,
+                isexec=not config['library'],
+                sources=config['sources'],
+                includes=config['include'],
+            )
+
+            for name, config
+            in self._config['target'].items()
+        }
