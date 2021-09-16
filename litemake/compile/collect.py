@@ -22,6 +22,7 @@ class TargetsCollection:
 
     def collect(self,
                 target: str,
+                library: bool,
                 sources: typing.List[str],
                 ) -> None:
         self.targets.append(
@@ -29,6 +30,7 @@ class TargetsCollection:
                 package=self.package,
                 target=target,
                 version=self.version,
+                isexec=not library,
                 basepath=self.basepath,
                 sources=sources,
                 compiler=self.compiler,

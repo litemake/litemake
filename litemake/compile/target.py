@@ -10,6 +10,9 @@ from .graph import (
     ExecutableFileNode,
 )
 
+if typing.TYPE_CHECKING:
+    from .graph import CompilationFileNode
+
 
 class TargetCompiler:
 
@@ -17,6 +20,7 @@ class TargetCompiler:
                  package: str,
                  target: str,
                  version: typing.Tuple[int, int, int],
+                 isexec: bool,
                  basepath: str,
                  sources: typing.List[str],  # list of globs
                  compiler: AbstractCompiler,
@@ -24,22 +28,28 @@ class TargetCompiler:
         self.package = package
         self.target = target
         self.version = version
+        self.isexec = isexec
         self.basepath = basepath
         self.sources = sources
         self.compiler = compiler
 
-    def build_executable_graph(self, output: OutputFolder) -> ExecutableFileNode:
-        libid = output.library_id(self.package, self.target, self.version)
-        dest = os.path.join(self.basepath, libid + '.out')
+    def build_graph(self, output: OutputFolder) -> 'CompilationFileNode':
+        if self.isexec:
+            return self._build_executable_graph(output)
+        else:
+            return self._build_archive_graph(output)
 
+    def _build_executable_graph(self, output: OutputFolder) -> ExecutableFileNode:
+        libid = output.target_id(self.package, self.target, self.version)
+        dest = os.path.join(self.basepath, libid + '.out')
         executable = ExecutableFileNode(dest, self.compiler)
 
-        archive = self.build_archive_graph(output)
+        archive = self._build_archive_graph(output)
         executable.add_dep_archive(archive)
 
         return executable
 
-    def build_archive_graph(self, output: OutputFolder) -> ArchiveFileNode:
+    def _build_archive_graph(self, output: OutputFolder) -> ArchiveFileNode:
         archive = ArchiveFileNode(
             dest=output.archive_path(self.package, self.target, self.version),
             compiler=self.compiler,

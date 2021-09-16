@@ -81,9 +81,11 @@ def make(args):
     )
 
     for name in targets:
+        target_config = parser.config['target'][name]
         target_collection.collect(
             target=name,
-            sources=parser.config['target'][name]['sources'],
+            library=target_config['library'],
+            sources=target_config['sources'],
         )
 
 
