@@ -1,65 +1,78 @@
+import os
 import typing
 from glob import glob
-from os import path
 
-from .compiler import litemakeCompiler as Compiler
-from litemake.printer import litemakePrinter as Printer
-from litemake.exceptions import litemakeNoSourcesWarning
+from .compilers import AbstractCompiler
+from .output import litemakeOutputFolder as OutputFolder
+from .graph import (
+    CompilationFileNode,
+    ObjectFileNode,
+    ArchiveFileNode,
+    ExecutableFileNode,
+)
 
 
 class TargetCompiler:
 
     def __init__(self,
+                 package: str,
+                 target: str,
+                 version: typing.Tuple[int, int, int],
+                 basepath: str,
                  sources: typing.List[str],  # list of globs
-                 compiler: Compiler,
-                 dependencies: typing.List['TargetCompiler'],
-                 dependency: bool,  # is this target a dependency of another
+                 compiler: AbstractCompiler,
                  ) -> None:
+        self.package = package
+        self.target = target
+        self.version = version
+        self.basepath = basepath
         self.sources = sources
         self.compiler = compiler
-        self.dependencies = dependencies
-        self.dependency = dependency
 
-    def compile(self) -> typing.List[str]:
-        """ Compiles all object files required for this target, and return
-        a list of paths to those object files. """
+    def build_executable_graph(self, output: OutputFolder) -> ExecutableFileNode:
+        libid = output.library_id(self.package, self.target, self.version)
+        dest = os.path.join(self.basepath, libid + '.out')
 
-        # TODO: compile each dependency as a static library
-        return self.compile_me() + self.compile_dependencies()
+        executable = ExecutableFileNode(dest, self.compiler)
 
-    def compile_me(self) -> typing.List[str]:
-        """ Compiles only object file that are direct sources of this target
-        (without dependencies). Returns a list of paths to all compiled object
-        files. """
+        archive = self.build_archive_graph(output)
+        executable.add_dep_archive(archive)
 
-        files = list(self.find_sources())
-        # TODO: add a warning if no sources found in target.
+        return executable
 
-        for file in files:
-            self.compiler.compile_file(file)
+    def build_archive_graph(self, output: OutputFolder) -> ArchiveFileNode:
+        archive = ArchiveFileNode(
+            dest=output.archive_path(self.package, self.target, self.version),
+            compiler=self.compiler,
+        )
 
-        return [
-            self.compiler.src_to_obj_path(src)
-            for src in files
-        ]
+        for src in self.find_sources():
+            dest = self.source_to_object(src, output)
+            node = ObjectFileNode(
+                src, dest,
+                compiler=self.compiler, parent=archive)
+            archive.add_object(node)
 
-    def compile_dependencies(self) -> typing.List[str]:
-        """ Compile all object files of dependencies for this target, and
-        return a list of path to those object files. """
+        return archive
 
-        objs = list()
-        for target in self.dependencies:
-            objs += target.compile()
+    def source_to_object(self, src: str, output: OutputFolder) -> str:
+        return output.object_path(self.package, self.target, self.version,
+                                  os.path.relpath(src, self.basepath))
 
-        return objs
+    def find_objects(self, output: OutputFolder) -> typing.Generator[str, None, None]:
+        yield from (
+            self.source_to_object(src, output)
+            for src in self.find_sources()
+        )
 
-    def find_sources(self) -> typing.List[str]:
+    def find_sources(self) -> typing.Generator[str, None, None]:
         """ Converts the list of globs into a list of file path that matches
         the globs pattern. """
 
         yield from (
             file
             for glb in self.sources
-            for file in glob(glb, recursive=True)
-            if path.isfile(file)
+            for file in glob(
+                os.path.join(self.basepath, glb), recursive=True)
+            if os.path.isfile(file)
         )
