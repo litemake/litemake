@@ -97,6 +97,7 @@ def make(args):
                 target=name,
                 library=target_config['library'],
                 sources=target_config['sources'],
+                includes=target_config['include'],
             )
 
     target_collection.make()
