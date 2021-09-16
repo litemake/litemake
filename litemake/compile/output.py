@@ -23,7 +23,8 @@ class OutputFolder:
                   target: str,
                   version: typing.Tuple[int, int, int],
                   ) -> str:
-        return f"{package}:{target}-v{':'.join(str(v) for v in version)}"
+        name = f'{package}:{target}' if target else package
+        return f"{name}-v{':'.join(str(v) for v in version)}"
 
     def archive_path(self,
                      package: str,

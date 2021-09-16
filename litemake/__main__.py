@@ -58,19 +58,6 @@ def make(args):
     parser = Parser(path.join(args.directory, args.file))
     compiler = parser.config['litemake']['compiler']()
 
-    targets = set(args.targets)
-    if len(targets) == 0:
-        first = next(iter(parser.config['target']))
-        targets = {first}
-        Printer.warning(
-            f'*no explicit target:* executing first target {first!r}')
-
-    known_targets = set(parser.config['target'].keys())
-    unknown_targets = targets - known_targets
-
-    if unknown_targets:
-        raise litemakeUnknownTargetsError(unknown_targets)
-
     litemake = parser.config['litemake']
     version = litemake['meta']['version']
     target_collection = TargetsCollection(
@@ -81,13 +68,35 @@ def make(args):
         compiler=compiler,
     )
 
-    for name in targets:
-        target_config = parser.config['target'][name]
+    targets = set(args.targets)
+    if len(targets) == 0:
+        first = next(iter(parser.config['target']))
+        Printer.warning(
+            f'*no explicit target:* executing first target {first!r}')
+
+        target_config = parser.config['target'][first]
         target_collection.collect(
-            target=name,
+            # we use empty string as the target name to represent that it is
+            # the default target
+            target=str(),
             library=target_config['library'],
             sources=target_config['sources'],
         )
+
+    else:
+        known_targets = set(parser.config['target'].keys())
+        unknown_targets = targets - known_targets
+
+        if unknown_targets:
+            raise litemakeUnknownTargetsError(unknown_targets)
+
+        for name in targets:
+            target_config = parser.config['target'][name]
+            target_collection.collect(
+                target=name,
+                library=target_config['library'],
+                sources=target_config['sources'],
+            )
 
     target_collection.make()
 
