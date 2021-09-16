@@ -8,6 +8,7 @@ from .templates import Template
 
 from .endpoints import (
     StringTemplate as String,
+    CompilerTemplate as Compiler,
     FolderPathTemplate as FolderPath,
     RelFolderPathTemplate as RelFolderPath,
     IntegerTemplate as Integer,
@@ -32,9 +33,7 @@ class SetupConfigParser:
         litemake=Template(
             spec=Integer(range_min=0, default=0),
             output=FolderPath(default='./.litemake/'),
-            objsuffix=String(default='.o'),
-            compiler=String(default='g++'),
-            flags=ListOf(String(min_len=1), default=list()),
+            compiler=Compiler(default='g++'),
 
             meta=Template(
                 name=String(

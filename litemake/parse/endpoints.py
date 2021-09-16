@@ -3,6 +3,7 @@
 import typing
 from os import path
 
+from litemake.compile.compilers import COMPILERS
 
 from litemake.exceptions import litemakeTemplateError
 
@@ -109,6 +110,23 @@ class RelFolderPathTemplate(FolderPathTemplate):
                 fieldpath, f"Path must be relative, not absolute ({value!r})")
 
         return value
+
+
+class CompilerTemplate(StringTemplate):
+
+    def __init__(self, default=MISSING) -> None:
+        super().__init__(default=default)
+
+    def validate(self, value, fieldpath: typing.List[str]) -> None:
+        value = super().validate(value, fieldpath)
+        value = value.lower().strip()
+
+        # TODO: add support for providing a full path to the compiler executable
+        if value not in COMPILERS:
+            raise litemakeTemplateError(
+                fieldpath, f'Unsupported compiler {value!r}')
+
+        return COMPILERS.get(value)
 
 
 class IntegerTemplate(TemplateEndpoint):
