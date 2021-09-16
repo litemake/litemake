@@ -49,7 +49,7 @@ class SetupConfigParser:
 
                 version=Template(
                     major=Integer(range_min=0, default=0),
-                    miner=Integer(range_min=0, default=0),
+                    minor=Integer(range_min=0, default=0),
                     patch=Integer(range_min=0, default=0),
                     label=String(
                         default='', max_len=10,
