@@ -7,7 +7,6 @@ from .base import AbstractCompiler
 class LlvmCompiler(AbstractCompiler):
 
     def create_obj(self, src: str, dest: str) -> None:
-        os.makedirs(os.path.dirname(dest), exist_ok=True)
         self._exec_cmd(self.name, '-c', src, '-o', dest)
 
     def create_archive(self, dest: str, objs: typing.List[str]) -> None:

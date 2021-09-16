@@ -50,6 +50,7 @@ class ObjectFileNode(CompilationFileNode):
         self.src = src
 
     def generate_myself(self,) -> None:
+        os.makedirs(os.path.dirname(self.dest), exist_ok=True)
         self.compiler.create_obj(self.src, self.dest)
 
     def generate_all(self) -> typing.List['CompilationFileNode']:
@@ -113,6 +114,7 @@ class ArchiveFileNode(ArchiveDependentFileNode):
         return generated
 
     def generate_myself(self,) -> None:
+        os.makedirs(os.path.dirname(self.dest), exist_ok=True)
         objs = [obj.dest for obj in self.dep_objects]
         self.compiler.create_archive(self.dest, objs)
 
@@ -141,5 +143,6 @@ class ExecutableFileNode(ArchiveDependentFileNode):
         return generated
 
     def generate_myself(self,) -> None:
+        os.makedirs(os.path.dirname(self.dest), exist_ok=True)
         deps = [arc.dest for arc in self.dep_archives]
         self.compiler.create_executable(self.dest, deps)
