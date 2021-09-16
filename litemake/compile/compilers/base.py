@@ -39,7 +39,7 @@ class AbstractCompiler(ABC):
         to run this compiler successfully. """
 
     @abstractmethod
-    def create_obj(self, src: str, dest: str) -> None:
+    def create_obj(self, src: str, dest: str, includes: typing.List[str]) -> None:
         """ Compile the given source C/C++ file into a object file. """
 
     @abstractmethod

@@ -44,14 +44,16 @@ class ObjectFileNode(CompilationFileNode):
                  src: str,
                  dest: str,
                  compiler: AbstractCompiler,
+                 includes: typing.List[str],
                  parent: 'ArchiveFileNode',
                  ) -> None:
         super().__init__(dest, compiler, parent)
         self.src = src
+        self.includes = includes
 
     def generate_myself(self,) -> None:
         os.makedirs(os.path.dirname(self.dest), exist_ok=True)
-        self.compiler.create_obj(self.src, self.dest)
+        self.compiler.create_obj(self.src, self.dest, self.includes)
 
     def generate_all(self) -> typing.List['CompilationFileNode']:
         if self.required_regen:

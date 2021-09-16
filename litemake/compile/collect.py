@@ -42,6 +42,7 @@ class TargetsCollection:
                 target: str,
                 library: bool,
                 sources: typing.List[str],
+                includes: typing.List[str],
                 ) -> None:
         self.targets.append(
             TargetCompiler(
@@ -51,6 +52,7 @@ class TargetsCollection:
                 isexec=not library,
                 basepath=self.basepath,
                 sources=sources,
+                includes=includes,
                 compiler=self.compiler,
             )
         )

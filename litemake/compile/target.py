@@ -23,6 +23,7 @@ class TargetCompiler:
                  isexec: bool,
                  basepath: str,
                  sources: typing.List[str],  # list of globs
+                 includes: typing.List[str],  # list of paths to folders
                  compiler: AbstractCompiler,
                  ) -> None:
         self.package = package
@@ -31,6 +32,7 @@ class TargetCompiler:
         self.isexec = isexec
         self.basepath = basepath
         self.sources = sources
+        self.includes = includes
         self.compiler = compiler
 
     def build_graph(self, output: OutputFolder) -> 'CompilationFileNode':
@@ -59,7 +61,10 @@ class TargetCompiler:
             dest = self.source_to_object(src, output)
             node = ObjectFileNode(
                 src, dest,
-                compiler=self.compiler, parent=archive)
+                compiler=self.compiler,
+                includes=self.includes,
+                parent=archive,
+            )
             archive.add_object(node)
 
         return archive

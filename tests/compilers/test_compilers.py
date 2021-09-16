@@ -1,5 +1,7 @@
 import os
 
+from tests.utils import change_cwd
+
 import typing
 if typing.TYPE_CHECKING:
     from tests.utils import VirtualProject
@@ -32,17 +34,51 @@ class _TestCompilerC(_TestCompiler):
 
         ''')
 
-        obj_dest = os.path.join(project.basepath, 'main.o')
-        self.COMPILER.create_obj(src, obj_dest)
+        main_o = os.path.join(project.basepath, 'main.o')
+        main_a = os.path.join(project.basepath, 'main.a')
+        main_out = os.path.join(project.basepath, 'main.out')
 
-        arc_dest = os.path.join(project.basepath, 'main.a')
-        self.COMPILER.create_archive(arc_dest, [obj_dest])
+        self.COMPILER.create_obj(src, main_o, list())
+        self.COMPILER.create_archive(main_a, [main_o])
+        self.COMPILER.create_executable(main_out, [main_a])
 
-        out_dest = os.path.join(project.basepath, 'main.out')
-        self.COMPILER.create_executable(out_dest, [obj_dest])
-
-        out = self._execute_binary(out_dest)
+        out = self._execute_binary(main_out)
         assert out == 'Hello from litemake!\n'
+
+    def test_c_with_includes(self, project: 'VirtualProject'):
+        project.add_file('main.c', '''
+            #include <stdio.h>
+            #include <mymath/math.h>
+
+            int main() {
+                printf("2 + 2 = %d\\n", add(2,2));
+                printf("2 ^ 4 = %d\\n", pow(2, 4));
+            }
+        ''')
+
+        project.add_file('include/mymath/math.h', '''
+            int add(int, int);
+            int pow(int, int);
+        ''')
+
+        project.add_file('math.c', '''
+            #include <mymath/math.h>
+            
+            int add(int a, int b) { return a + b; };
+            int pow(int a, int b) {
+                if (b <= 0) { return 1; }
+                return a * pow(a, b-1);
+            };
+        ''')
+
+        with change_cwd(project.basepath):
+            self.COMPILER.create_obj('main.c', 'main.o', ['include/'])
+            self.COMPILER.create_obj('math.c', 'math.o', ['include/'])
+            self.COMPILER.create_archive('main.a', ['main.o', 'math.o'])
+            self.COMPILER.create_executable('main.out', ['main.a'])
+            out = self._execute_binary('./main.out')
+
+        assert out == '2 + 2 = 4\n2 ^ 4 = 16\n'
 
 
 class _TestCompilerCPP(_TestCompilerC):
@@ -58,7 +94,7 @@ class _TestCompilerCPP(_TestCompilerC):
         ''')
 
         obj_dest = os.path.join(project.basepath, 'main.o')
-        self.COMPILER.create_obj(src, obj_dest)
+        self.COMPILER.create_obj(src, obj_dest, list())
 
         arc_dest = os.path.join(project.basepath, 'main.a')
         self.COMPILER.create_archive(arc_dest, [obj_dest])

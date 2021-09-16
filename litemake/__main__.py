@@ -81,6 +81,7 @@ def make(args):
             target=str(),
             library=target_config['library'],
             sources=target_config['sources'],
+            includes=target_config['include'],
         )
 
     else:
