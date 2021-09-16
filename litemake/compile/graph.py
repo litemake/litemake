@@ -93,6 +93,11 @@ class ArchiveFileNode(ArchiveDependentFileNode):
         super().__init__(dest, compiler, parent=parent)
         self.dep_objects: typing.Set['ObjectFileNode'] = set()
 
+    @property
+    def is_empty(self) -> bool:
+        """ Returns True if there are no object or archives inside this archive. """
+        return not set().union(self.dep_objects, self.dep_archives)
+
     def add_object(self, node: 'ObjectFileNode') -> None:
         good = node not in self.dep_objects
         if good: self.dep_objects.add(node)  # noqa: E701
@@ -107,7 +112,7 @@ class ArchiveFileNode(ArchiveDependentFileNode):
         for obj in self.dep_objects:
             generated += obj.generate_all()
 
-        if generated or self.required_regen:
+        if not self.is_empty and (generated or self.required_regen):
             self.generate_myself()
             generated.append(self)
 
@@ -130,13 +135,17 @@ class ExecutableFileNode(ArchiveDependentFileNode):
                  ) -> None:
         super().__init__(dest, compiler, parent=None)
 
+    @property
+    def is_empty(self,) -> bool:
+        return all(a.is_empty for a in self.dep_archives)
+
     def generate_all(self,) -> typing.List['CompilationFileNode']:
         generated = list()
 
         for arc in self.dep_archives:
             generated += arc.generate_all()
 
-        if generated or self.required_regen:
+        if not self.is_empty and (generated or self.required_regen):
             self.generate_myself()
             generated.append(self)
 
