@@ -7,14 +7,14 @@ from toml import TomlDecodeError
 from .templates import Template
 
 from .endpoints import (
-    StringTemplate as String,
-    CompilerTemplate as Compiler,
-    FolderPathTemplate as FolderPath,
-    RelFolderPathTemplate as RelFolderPath,
-    IntegerTemplate as Integer,
-    BoolTemplate as Bool,
-    ListTemplate as ListOf,
-    DictTemplate as Dict,
+    StringTemplate,
+    CompilerTemplate,
+    FolderPathTemplate,
+    RelFolderPathTemplate,
+    IntegerTemplate,
+    BoolTemplate,
+    ListTemplate,
+    DictTemplate,
 )
 
 from litemake.exceptions import (
@@ -31,27 +31,27 @@ class SetupConfigParser:
 
     TEMPLATE = Template(
         litemake=Template(
-            spec=Integer(range_min=0, default=0),
-            output=FolderPath(default='./.litemake/'),
-            compiler=Compiler(default='g++'),
+            spec=IntegerTemplate(range_min=0, default=0),
+            output=FolderPathTemplate(default='./.litemake/'),
+            compiler=CompilerTemplate(default='g++'),
 
             meta=Template(
-                name=String(
+                name=StringTemplate(
                     min_len=3, max_len=30,
                     allowed_chars=NAME_CHARS,
                     no_repeating=SPECIAL_CHARS,
                     no_on_edges=SPECIAL_CHARS,
                 ),
 
-                description=String(max_len=200, default=str()),
-                author=String(max_len=200, default=str()),
+                description=StringTemplate(max_len=200, default=str()),
+                author=StringTemplate(max_len=200, default=str()),
                 # TODO: add metadata fields: email, url(s)
 
                 version=Template(
-                    major=Integer(range_min=0, default=0),
-                    minor=Integer(range_min=0, default=0),
-                    patch=Integer(range_min=0, default=0),
-                    label=String(
+                    major=IntegerTemplate(range_min=0, default=0),
+                    minor=IntegerTemplate(range_min=0, default=0),
+                    patch=IntegerTemplate(range_min=0, default=0),
+                    label=StringTemplate(
                         default='', max_len=10,
                         allowed_chars=NAME_CHARS,
                         no_repeating=SPECIAL_CHARS,
@@ -59,30 +59,30 @@ class SetupConfigParser:
                     ),
                 ),
 
-                standard=String(min_len=1),
+                standard=StringTemplate(min_len=1),
                 # TODO: a list of supported standards.
             ),
         ),
 
         # TODO: custom error message when no targets provided
-        target=Dict(
+        target=DictTemplate(
             default=dict(),
             min_len=1,
-            keys=String(
+            keys=StringTemplate(
                 min_len=1, max_len=30,
                 allowed_chars=NAME_CHARS,
                 no_repeating=SPECIAL_CHARS,
                 no_on_edges=SPECIAL_CHARS,
             ),
             values=Template(
-                library=Bool(default=False),
-                sources=ListOf(
+                library=BoolTemplate(default=False),
+                sources=ListTemplate(
                     default=list(),
-                    listof=String(min_len=1),
+                    listof=StringTemplate(min_len=1),
                 ),
-                include=ListOf(
+                include=ListTemplate(
                     default=list(),
-                    listof=RelFolderPath(must_exist=True),
+                    listof=RelFolderPathTemplate(must_exist=True),
                 ),
             ),
         ),
