@@ -77,6 +77,7 @@ def make(args):
         package=litemake['meta']['name'],
         version=(version['major'], version['minor'], version['patch']),
         basepath=args.directory,
+        outpath=litemake['output'],
         compiler=compiler,
     )
 
@@ -87,6 +88,8 @@ def make(args):
             library=target_config['library'],
             sources=target_config['sources'],
         )
+
+    target_collection.make()
 
 
 def main():
