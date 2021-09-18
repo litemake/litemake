@@ -4,6 +4,8 @@ import litemake.exceptions
 from inspect import cleandoc
 import os.path
 
+from slugify import slugify
+
 
 class VirtualProject:
     """ An objects that represents a virtual testing folder. This folder can be

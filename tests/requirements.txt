@@ -1,3 +1,7 @@
+# - - - PYTEST RELATED - - - #
 pytest>=6.0.0           # Testing framework
 pytest-cov>=2.12.0      # For coverage reports
 pytest-randomly>=3.9    # Randomly order tests
+
+# - - - MISC - - - #
+python-slugify>=5.0,<6.0  # Converting test names into filenames
