@@ -53,7 +53,7 @@ jobs:
 
   coverage:
     name: Generate Coverage Report 🙃
-    needs: test
+    needs: install
     runs-on: ubuntu-latest
 
     steps:
