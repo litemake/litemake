@@ -4,8 +4,13 @@ on: [push, pull_request]
 
 jobs:
   install:
-    name: 📌 Install (Ubuntu)
-    runs-on: ubuntu-latest
+    name: 📌 Install
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+
     steps:
       - name: Clone 👀
         uses: actions/checkout@v2
@@ -19,9 +24,14 @@ jobs:
         run: make install
 
   test:
-    name: 🎯 Test (Ubuntu)
-    runs-on: ubuntu-latest
+    name: 🎯 Test
     needs: install
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+
     steps:
       - name: Clone 👀
         uses: actions/checkout@v2
@@ -38,9 +48,32 @@ jobs:
         run: make develop
 
       - name: Test 🎯
+        run: make test
+
+  coverage:
+    name: Generate Coverage Report 🙃
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clone 👀
+        uses: actions/checkout@v2
+
+      - name: Setup Python 🐍
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+
+      - name: Install Dependencies 📌
+        run: make install-compilers
+
+      - name: Install Package ✨
+        run: make develop
+
+      - name: Test Coverage 🚀
         run: make cov
 
-      - name: Upload Coverage Report 🙃
+      - name: Upload Report 🙃
         uses: codecov/codecov-action@v2
         if: ${{ always() }}
         with:
