@@ -23,8 +23,18 @@ class OutputFolder:
                   target: str,
                   version: typing.Tuple[int, int, int],
                   ) -> str:
-        name = f'{package}:{target}' if target else package
-        return f"{name}-v{':'.join(str(v) for v in version)}"
+        version_str = f"-v{'.'.join(str(v) for v in version)}"
+        target_str = "-" + target if target else str()
+        return package + version_str + target_str
+
+    def binary_name(self,
+                    package: str,
+                    target: str,
+                    version: typing.Tuple[int, int, int],
+                    ) -> str:
+        name = self.target_id(package, target, version)
+        ext = 'exe' if os.name == 'nt' else 'out'
+        return f'{name}.{ext}'
 
     def archive_path(self,
                      package: str,

@@ -42,8 +42,8 @@ class TargetCompiler:
             return self._build_archive_graph(output)
 
     def _build_executable_graph(self, output: OutputFolder) -> ExecutableFileNode:
-        libid = output.target_id(self.package, self.target, self.version)
-        dest = os.path.join(self.basepath, libid + '.out')
+        name = output.binary_name(self.package, self.target, self.version)
+        dest = os.path.join(self.basepath, name)
         executable = ExecutableFileNode(dest, self.compiler)
 
         archive = self._build_archive_graph(output)
