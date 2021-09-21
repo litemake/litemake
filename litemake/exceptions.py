@@ -69,7 +69,7 @@ class litemakeParsingError(litemakeError):
 
 
 class litemakeSetupFileNotFoundError(litemakeError):
-    """ Raised if the default (`setup.litemake.toml`) setup configuration
+    """ Raised if the default (`package.litemake.toml`) setup configuration
     file isn't present or if the custom file (specified with the -f/--flags
     arguments) isn't found. """
 

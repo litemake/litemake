@@ -11,7 +11,7 @@ A new way to build, test and distribute your C/C++ projects and libraries.
 
 **litemake** is a cross-platform CLI that aims to simplify the building, testing and distribution process of your C/C++ code.
 
-By configuration a simple `setup.litemake.toml` file, **litemake** will be able to automatically:
+By configuration a simple `package.litemake.toml` file, **litemake** will be able to automatically:
 
 - Download required dependencies and build you project
 - Build only changed files to reduce compile time (similar to Make)
@@ -28,7 +28,7 @@ Other programming languages (mostly high-level ones like *Python* or *JavaScript
 
 ### And what about C/C++?
 
-**litemake** aims to bring the described above to the C/C++ community. By writing a simple configuration file `setup.litemake.toml` and placing it in your project's root directory, users will be able to download all required dependencies, build and install your application just by using one command: `litemake`.
+**litemake** aims to bring the described above to the C/C++ community. By writing a simple configuration file `package.litemake.toml` and placing it in your project's root directory, users will be able to download all required dependencies, build and install your application just by using one command: `litemake`.
 
 Furthermore, with tools like [nanotest] you will be able to automatically build and run your tests. The sky is really the limit!
 
