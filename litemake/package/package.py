@@ -25,12 +25,14 @@ class LocalPackage(Package):
     @property
     def description(self,) -> str:
         """ A sentence or two that describe the package, as a string. """
-        return self._parser.package_description
+        val = self._parser.package_description
+        return val if val else None
 
     @property
     def author(self,) -> str:
         """ The name of the author of the package, as a string. """
-        return self._parser.package_author
+        val = self._parser.package_author
+        return val if val else None
 
     @property
     def version(self,) -> typing.Tuple[int, int, int]:
