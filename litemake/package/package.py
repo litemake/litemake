@@ -55,7 +55,7 @@ class LocalPackage(Package):
         """ A unique string that represents the current version of the
         package. """
 
-        id = f"{self.name}-v{'.'.join(self.version)}"
+        id = f"{self.name}-v{'.'.join(str(v) for v in self.version)}"
         if self.version_label:
             id += f'-{self.version_label}'
         return id
