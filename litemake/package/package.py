@@ -1,9 +1,17 @@
 import os
-import typing
 from abc import ABC
 
-from .parser import PackageParser
+import toml
+from toml import TomlDecodeError
+
+from .info import PackageInfo
 from litemake.constants import DEFAULT_SETUP_FILENAME
+
+from litemake.exceptions import (
+    litemakeSetupFileNotFoundError,
+    litemakeParsingError,
+    litemakeTemplateError,
+)
 
 
 class Package(ABC):
@@ -12,50 +20,32 @@ class Package(ABC):
 
 class LocalPackage(Package):
 
-    def __init__(self, basedir: str, configfile: str = None):
+    def __init__(self, basepath: str, configfile: str = None):
+        self.basepath = basepath
+
         configfile = configfile or DEFAULT_SETUP_FILENAME
-        configpath = os.path.join(basedir, configfile)
-        self._parser = PackageParser(configpath)
+        configpath = os.path.join(basepath, configfile)
 
-    @property
-    def name(self,) -> str:
-        """ The name of the package, as a string. """
-        return self._parser.package_name
+        try:
+            with open(configpath, mode='r', encoding='utf8') as file:
+                data = toml.load(file)
 
-    @property
-    def description(self,) -> str:
-        """ A sentence or two that describe the package, as a string. """
-        val = self._parser.package_description
-        return val if val else None
+        except FileNotFoundError:
+            raise litemakeSetupFileNotFoundError(configfile) from None
 
-    @property
-    def author(self,) -> str:
-        """ The name of the author of the package, as a string. """
-        val = self._parser.package_author
-        return val if val else None
+        except TomlDecodeError as err:
+            raise litemakeParsingError(
+                filename=configpath,
+                line=err.lineno,
+                col=err.colno,
+                msg=err.msg,
+            ) from None
 
-    @property
-    def version(self,) -> typing.Tuple[int, int, int]:
-        """ A tuple that represents the current version of the package.
-        The values in the tuple are positive integers that represent
-        the version number following the Semantic Versioning convention
-        (https://semver.org/). """
-        return self._parser.package_version[:3]
+        try:
+            self._info = PackageInfo(data)
 
-    @property
-    def version_label(self,) -> typing.Optional[str]:
-        """ A short string that adds information about the version (for example,
-        'alpha', 'experimental', etc). If this is a "regular" release version,
-        the value returned should be `None`. """
-        val = self._parser.package_version[3]
-        return val if val else None
+        except litemakeTemplateError as err:
+            raise err.to_config_error(configpath)
 
-    @property
-    def identifier(self,) -> str:
-        """ A unique string that represents the current version of the
-        package. """
-
-        id = f"{self.name}-v{'.'.join(str(v) for v in self.version)}"
-        if self.version_label:
-            id += f'-{self.version_label}'
-        return id
+    def __getattr__(self, name: str):
+        return self._info.__getattribute__(name)
