@@ -1,6 +1,6 @@
 import os
 import typing
-from abc import ABC, abstractmethod
+from abc import ABC
 
 from .parser import PackageParser
 from litemake.constants import DEFAULT_SETUP_FILENAME
@@ -33,12 +33,27 @@ class LocalPackage(Package):
         return self._parser.package_author
 
     @property
-    def version(self,) -> typing.Tuple[int, int, int, str]:
+    def version(self,) -> typing.Tuple[int, int, int]:
         """ A tuple that represents the current version of the package.
-        The first 3 values in the tuple are positive integers that represent
+        The values in the tuple are positive integers that represent
         the version number following the Semantic Versioning convention
-        (https://semver.org/), while the 4th item in the tuple is a short
-        string that adds information about the version (for example, 'alpha',
-        'experimental', etc). """
+        (https://semver.org/). """
+        return self._parser.package_version[:3]
 
-        return self._parser.package_version
+    @property
+    def version_label(self,) -> typing.Optional[str]:
+        """ A short string that adds information about the version (for example,
+        'alpha', 'experimental', etc). If this is a "regular" release version,
+        the value returned should be `None`. """
+        val = self._parser.package_version[3]
+        return val if val else None
+
+    @property
+    def identifier(self,) -> str:
+        """ A unique string that represents the current version of the
+        package. """
+
+        id = f"{self.name}-v{'.'.join(self.version)}"
+        if self.version_label:
+            id += f'-{self.version_label}'
+        return id
