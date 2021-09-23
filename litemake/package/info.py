@@ -108,7 +108,7 @@ class TargetInfo:
         ),
         include=ListTemplate(
             default=list(),
-            listof=RelFolderPathTemplate(must_exist=True),
+            listof=RelFolderPathTemplate(),
         ),
     )
 
