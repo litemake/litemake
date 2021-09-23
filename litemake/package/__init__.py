@@ -5,4 +5,5 @@ from .package import (
 
 from .info import (
     PackageInfo,
+    TargetInfo,
 )

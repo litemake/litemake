@@ -5,6 +5,10 @@ from litemake.parse import (
     Template,
     StringTemplate,
     IntegerTemplate,
+    BoolTemplate,
+    ListTemplate,
+    Template,
+    RelFolderPathTemplate,
 )
 
 
@@ -84,3 +88,53 @@ class PackageInfo:
         if self.version_label:
             id += f'-{self.version_label}'
         return id
+
+
+class TargetInfo:
+
+    NAME_TEMPLATE = StringTemplate(
+        min_len=3, max_len=30,
+        allowed_chars=NAME_CHARS,
+        no_repeating=SPECIAL_CHARS,
+        no_on_edges=SPECIAL_CHARS,
+    )
+
+    TEMPLATE = Template(
+        library=BoolTemplate(default=False),
+        sources=ListTemplate(
+            default=list(),
+            min_len=1,
+            listof=StringTemplate(min_len=1),
+        ),
+        include=ListTemplate(
+            default=list(),
+            listof=RelFolderPathTemplate(must_exist=True),
+        ),
+    )
+
+    def __init__(self, name, data, fieldpath: typing.List[str]) -> None:
+        self.__name = self.NAME_TEMPLATE.validate(name, fieldpath)
+        self.__data = self.TEMPLATE.validate(data, fieldpath + [self.__name])
+
+    @property
+    def name(self,) -> str:
+        """ The name of the target, as a string. """
+        return self.__name
+
+    @property
+    def is_library(self,) -> bool:
+        """ `True` if the current target represents a library, and `False` if it
+        compiles into an executable. """
+        return self.__data['library']
+
+    @property
+    def sources(self,) -> typing.List[str]:
+        """ A list of globs that represents all source files of the current
+        target. """
+        return self.__data['sources']
+
+    @property
+    def include(self,) -> typing.List[str]:
+        """ A list of relative paths to directories that needs to be included
+        when compiling the current target. """
+        return self.__data['include']
