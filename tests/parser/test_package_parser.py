@@ -39,6 +39,28 @@ def test_package_custom_version(project: 'VirtualProject'):
     assert info.identifier == 'testing-v1.2.3-dev'
 
 
+def test_package_all_properties(project: 'VirtualProject'):
+    path = project.add_setup('''
+        name="hello-world"
+        description="A simple hello world program."
+        author="Alon Krymgand (RealA10N)"
+        
+        [version]
+        major=1
+        minor=2
+        patch=3
+        label="production"
+    ''')
+
+    info = PackageParser(path)
+    assert info.name == 'hello-world'
+    assert info.description == 'A simple hello world program.'
+    assert info.author == 'Alon Krymgand (RealA10N)'
+    assert info.version == (1, 2, 3)
+    assert info.version_label == 'production'
+    assert info.identifier == 'hello-world-v1.2.3-production'
+
+
 @pytest.mark.parametrize('name', (
     'שלוםעולם',
     'Hello world',
