@@ -10,3 +10,6 @@ from .endpoints import (
     ListTemplate,
     DictTemplate,
 )
+
+from .file import FileParser
+from .package import PackageParser
