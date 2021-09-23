@@ -1,5 +1,6 @@
 import string
 import typing
+from dataclasses import dataclass
 
 from .file import FileParser
 from .templates import Template
@@ -13,6 +14,13 @@ from .endpoints import (
 
 SPECIAL_CHARS = '-_.'
 NAME_CHARS = string.ascii_letters + string.digits + SPECIAL_CHARS
+
+
+@dataclass
+class TargetInfo:
+    library: bool
+    sources: typing.List[str]
+    include: typing.List[str]
 
 
 class TargetsParser(FileParser):
@@ -48,3 +56,12 @@ class TargetsParser(FileParser):
     def default_target(self,) -> str:
         """ The name (string) of the default collected target. """
         return self.targets[0]
+
+    def target(self, name: str) -> typing.Optional['TargetInfo']:
+        """ Returns a dataclass that represents a target with the
+        given name (if exists). If a target with given name doesn't
+        exist, returns `None`. """
+        if name not in self.targets:
+            return None
+
+        return TargetInfo(**self._data[name])

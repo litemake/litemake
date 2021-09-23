@@ -8,7 +8,9 @@ if typing.TYPE_CHECKING:
 def test_target_names(project: 'VirtualProject'):
     path = project.add_setup('''
         [build]
+        library=true
         sources=["src/**/*.c"]
+        include=["include/"]
 
         [test]
         sources=["src/**/*.c", "tests/**/*.c"]
@@ -17,3 +19,13 @@ def test_target_names(project: 'VirtualProject'):
     info = TargetsParser(path)
     assert info.targets == ['build', 'test']
     assert info.default_target == 'build'
+
+    build = info.target('build')
+    assert build.library
+    assert build.sources == ['src/**/*.c']
+    assert build.include == ['include/']
+
+    test = info.target('test')
+    assert not test.library
+    assert test.sources == ['src/**/*.c', 'tests/**/*.c']
+    assert test.include == []
