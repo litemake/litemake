@@ -9,7 +9,7 @@ from .endpoints import (
 
 import typing
 if typing.TYPE_CHECKING:
-    from litemake.compile.compilers.base import AbstractCompiler
+    from litemake.compile.compilers.base import AbstractCompiler  # pragma: no cover
 
 
 class SettingsParser(FileParser):

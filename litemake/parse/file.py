@@ -4,7 +4,7 @@ from litemake.exceptions import litemakeParsingError, litemakeTemplateError
 
 import typing
 if typing.TYPE_CHECKING:
-    from .templates import BaseTemplate
+    from .templates import BaseTemplate  # pragma: no cover
 
 
 class FileParser(ABC):

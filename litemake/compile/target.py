@@ -11,7 +11,7 @@ from .graph import (
 )
 
 if typing.TYPE_CHECKING:
-    from .graph import CompilationFileNode
+    from .graph import CompilationFileNode  # pragma: no cover
 
 
 class TargetCompiler:
