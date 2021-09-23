@@ -44,24 +44,24 @@ class PackageInfo:
     def __init__(self, data, fieldpath: typing.List[str]):
         self.__data = self.TEMPLATE.validate(data, fieldpath=list())
 
-    @ property
+    @property
     def name(self,) -> str:
         """ The name of the current package, as a string. """
         return self.__data['name']
 
-    @ property
+    @property
     def description(self,) -> typing.Optional[str]:
         """ A sentence or two that describe the package, as a string. """
         val = self.__data['description']
         return val if val else None
 
-    @ property
+    @property
     def author(self,) -> typing.Optional[str]:
         """ The name of the author of the package, as a string. """
         val = self.__data['author']
         return val if val else None
 
-    @ property
+    @property
     def version(self,) -> typing.Tuple[int, int, int, str]:
         """ A tuple that represents the current version of the package.
         Consists of three positive integers that represent the version number
@@ -69,14 +69,14 @@ class PackageInfo:
         ver_dict = self.__data['version']
         return (ver_dict['major'], ver_dict['minor'], ver_dict['patch'])
 
-    @ property
+    @property
     def version_label(self,) -> typing.Optional[str]:
         """ A short string that adds information about the version (for example,
         'alpha', 'experimental', etc). """
         val = self.__data['version']['label']
         return val if val else None
 
-    @ property
+    @property
     def identifier(self,) -> str:
         """ A unique string that represents the current version of the
         package. """

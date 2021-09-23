@@ -1,4 +1,6 @@
+import pytest
 from litemake.package import PackageInfo
+from litemake.exceptions import litemakeTemplateError
 
 
 def test_basic_package_info():
@@ -28,3 +30,19 @@ def test_package_custom_version():
     assert info.version == (1, 2, 3)
     assert info.version_label == 'dev'
     assert info.identifier == 'testing-v1.2.3-dev'
+
+
+@pytest.mark.parametrize('name', (
+    'שלוםעולם',
+    'Hello world',
+    'ThisNameIsWayyyyyTooooooooLonggggg',
+    'InvalidChar!',
+    'Two__RepeatingChars',
+    'Yes_',
+    'Hello..There',
+))
+def test_package_invalid_names(name):
+    with pytest.raises(litemakeTemplateError):
+        PackageInfo(fieldpath=list(), data={
+            'name': name
+        })
