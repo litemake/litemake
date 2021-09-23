@@ -1,6 +1,5 @@
 import pytest
 from litemake.parse import PackageParser
-from litemake.package import PackageInfo
 from litemake.exceptions import litemakeConfigError
 
 import typing
