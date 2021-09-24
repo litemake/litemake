@@ -23,8 +23,8 @@ def test_absolute_paths(project: 'VirtualProject'):
     out = project.add_dir('.litemake_cache/')
 
     path = project.add_setup(f'''
-        home="{src}"
-        output="{out}"
+        home='{src}'
+        output='{out}'
     ''')
 
     info = SettingsParser(path)
