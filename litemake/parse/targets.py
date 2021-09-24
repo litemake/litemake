@@ -18,6 +18,7 @@ NAME_CHARS = string.ascii_letters + string.digits + SPECIAL_CHARS
 
 @dataclass
 class TargetInfo:
+    name: str
     library: bool
     sources: typing.List[str]
     include: typing.List[str]
@@ -64,4 +65,4 @@ class TargetsParser(FileParser):
         if name not in self.targets:
             return None
 
-        return TargetInfo(**self._data[name])
+        return TargetInfo(name=name, **self._data[name])
