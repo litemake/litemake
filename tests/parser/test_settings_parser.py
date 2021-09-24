@@ -14,5 +14,33 @@ def test_default_settings(project: 'VirtualProject'):
     path = project.add_setup('')  # empty settings file
     info = SettingsParser(path)
     assert info.home == os.getcwd()
-    assert info.output == os.path.join(os.getcwd(), '.litemake/')
+    assert info.output == os.path.join(project.basepath, '.litemake/')
     assert info.compiler.name == 'g++'
+
+
+def test_absolute_paths(project: 'VirtualProject'):
+    src = project.add_dir('src/')
+    out = project.add_dir('.litemake_cache/')
+
+    path = project.add_setup(f'''
+        home="{src}"
+        output="{out}"
+    ''')
+
+    info = SettingsParser(path)
+    assert info.home == src
+    assert info.output == out
+
+
+def test_relative_paths(project: 'VirtualProject'):
+    src = project.add_dir('src/')
+    out = project.add_dir('.litemake_cache/')
+
+    path = project.add_setup('''
+        home="src/"
+        output=".litemake_cache/"
+    ''')
+
+    info = SettingsParser(path)
+    assert info.home == src
+    assert info.output == out

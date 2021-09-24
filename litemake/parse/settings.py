@@ -15,7 +15,7 @@ if typing.TYPE_CHECKING:
 class SettingsParser(FileParser):
 
     TEMPLATE = Template(
-        home=FolderPathTemplate(must_exist=True, default=os.getcwd()),
+        home=FolderPathTemplate(default=os.getcwd()),
         output=FolderPathTemplate(default='.litemake/'),
         compiler=CompilerTemplate(default='g++'),
     )
@@ -24,7 +24,12 @@ class SettingsParser(FileParser):
     def home(self,) -> str:
         """ The home directory in which litemake will run relative to.
         The current working directory by default. """
-        return self._data['home']
+        path = self._data['home']
+        if os.path.isabs(path):
+            return path
+        else:
+            folder = os.path.dirname(self.filepath)
+            return os.path.join(folder, path)
 
     @property
     def output(self,) -> str:
@@ -36,7 +41,8 @@ class SettingsParser(FileParser):
         if os.path.isabs(path):
             return path
         else:
-            return os.path.join(self.home, path)
+            folder = os.path.dirname(self.filepath)
+            return os.path.join(folder, path)
 
     @property
     def compiler(self,) -> 'AbstractCompiler':
