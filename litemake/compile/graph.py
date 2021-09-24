@@ -35,6 +35,11 @@ class CompilationFileNode(ABC):
     def required_regen(self,) -> bool:
         return not os.path.exists(self.dest)
 
+    @abstractmethod
+    def all_nodes(self,) -> typing.Generator['CompilationFileNode', None, None]:
+        """ Generator that yields all nodes in the sub-tree in which the current
+        node is the head node. Nodes are yielded in order of dependence. """
+
 
 class ObjectFileNode(CompilationFileNode):
     """ A node that represents a source file that is compiled into an object
@@ -65,6 +70,11 @@ class ObjectFileNode(CompilationFileNode):
     def required_regen(self,) -> bool:
         return (super().required_regen or
                 os.path.getmtime(self.src) > os.path.getmtime(self.dest))
+
+    def all_nodes(self,) -> typing.Generator['CompilationFileNode', None, None]:
+        # There are no nodes that are dependent on an object file, and thus
+        # this generator only yields the current node.
+        yield self
 
 
 class ArchiveDependentFileNode(CompilationFileNode):
@@ -125,6 +135,13 @@ class ArchiveFileNode(ArchiveDependentFileNode):
         objs = [obj.dest for obj in self.dep_objects]
         self.compiler.create_archive(self.dest, objs)
 
+    def all_nodes(self,) -> typing.Generator['CompilationFileNode', None, None]:
+        for dep in self.dep_archives:
+            yield from dep.all_nodes()
+        for obj in self.dep_objects:
+            yield from obj.all_nodes()
+        yield self
+
 
 class ExecutableFileNode(ArchiveDependentFileNode):
     """ A node that represents an executable. In litemake, an executable can
@@ -157,3 +174,8 @@ class ExecutableFileNode(ArchiveDependentFileNode):
         os.makedirs(os.path.dirname(self.dest), exist_ok=True)
         deps = [arc.dest for arc in self.dep_archives]
         self.compiler.create_executable(self.dest, deps)
+
+    def all_nodes(self,) -> typing.Generator['CompilationFileNode', None, None]:
+        for dep in self.dep_archives:
+            yield from dep.all_nodes()
+        yield self
