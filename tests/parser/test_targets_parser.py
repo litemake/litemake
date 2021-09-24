@@ -27,7 +27,7 @@ def test_target_names(project: 'VirtualProject'):
     assert build.include == ['include/']
 
     test = info.target('test')
-    assert build.name == 'test'
+    assert test.name == 'test'
     assert not test.library
     assert test.sources == ['src/**/*.c', 'tests/**/*.c']
     assert test.include == []
