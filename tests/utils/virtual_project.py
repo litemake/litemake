@@ -1,10 +1,16 @@
-from litemake.__main__ import parser, make
+from litemake.__main__ import make
 import litemake.exceptions
 
 from inspect import cleandoc
 import os.path
 
 from slugify import slugify
+
+from litemake.constants import (
+    PACKAGE_CONFIG_FILENAME,
+    TARGETS_CONFIG_FILENAME,
+    SETTINGS_FILENAME,
+)
 
 
 class VirtualProject:
@@ -36,12 +42,14 @@ class VirtualProject:
         os.makedirs(dirpath, exist_ok=True)
         return dirpath
 
-    def add_setup(self, content: str, path: str = None) -> str:
-        path = path or litemake.constants.DEFAULT_SETUP_FILENAME
+    def add_targets_file(self, content: str, path: str = None) -> str:
+        path = path or TARGETS_CONFIG_FILENAME
         return self.add_file(path, content)
 
-    def make(self, *args):
-        # By default, the virtual project class adds the '-d' argument
-        # to run litemake inside the virtual project directory.
-        args = (f'-d{self.basepath}',) + args
-        return make(parser.parse_args(args))
+    def add_package_file(self, content: str, path: str = None) -> str:
+        path = path or PACKAGE_CONFIG_FILENAME
+        return self.add_file(path, content)
+
+    def add_settings_file(self, content: str, path: str = None) -> str:
+        path = path or SETTINGS_FILENAME
+        return self.add_file(path, content)

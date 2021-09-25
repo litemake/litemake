@@ -8,7 +8,7 @@ if typing.TYPE_CHECKING:
 
 
 def test_basic_package_info(project: 'VirtualProject'):
-    path = project.add_setup('''
+    path = project.add_package_file('''
         name="testing"
     ''')
 
@@ -22,7 +22,7 @@ def test_basic_package_info(project: 'VirtualProject'):
 
 
 def test_package_custom_version(project: 'VirtualProject'):
-    path = project.add_setup('''
+    path = project.add_package_file('''
         name="testing"
         
         [version]
@@ -39,7 +39,7 @@ def test_package_custom_version(project: 'VirtualProject'):
 
 
 def test_package_all_properties(project: 'VirtualProject'):
-    path = project.add_setup('''
+    path = project.add_package_file('''
         name="hello-world"
         description="A simple hello world program."
         author="Alon Krymgand (RealA10N)"
@@ -70,7 +70,7 @@ def test_package_all_properties(project: 'VirtualProject'):
     'Hello..There',
 ))
 def test_package_invalid_names(name, project: 'VirtualProject'):
-    path = project.add_setup(f'''
+    path = project.add_package_file(f'''
         name="{name}"
     ''')
 

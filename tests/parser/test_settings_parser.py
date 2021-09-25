@@ -11,7 +11,7 @@ def test_default_settings(project: 'VirtualProject'):
     # All settings should be provided by default, and using the settings
     # file shouldn't be mandetory.
 
-    path = project.add_setup('')  # empty settings file
+    path = project.add_settings_file('')  # empty settings file
     info = SettingsParser(path)
     assert info.home == os.getcwd()
     assert info.output == os.path.join(project.basepath, '.litemake/')
@@ -22,7 +22,7 @@ def test_absolute_paths(project: 'VirtualProject'):
     src = project.add_dir('src/')
     out = project.add_dir('.litemake_cache/')
 
-    path = project.add_setup(f'''
+    path = project.add_settings_file(f'''
         home='{src}'
         output='{out}'
     ''')
@@ -36,7 +36,7 @@ def test_relative_paths(project: 'VirtualProject'):
     src = project.add_dir('src/')
     out = project.add_dir('.litemake_cache/')
 
-    path = project.add_setup('''
+    path = project.add_settings_file('''
         home="src/"
         output=".litemake_cache/"
     ''')

@@ -6,7 +6,7 @@ if typing.TYPE_CHECKING:
 
 
 def test_target_names(project: 'VirtualProject'):
-    path = project.add_setup('''
+    path = project.add_targets_file('''
         [build]
         library=true
         sources=["src/**/*.c"]

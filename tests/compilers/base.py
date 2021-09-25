@@ -6,7 +6,7 @@ import pytest
 
 import typing
 if typing.TYPE_CHECKING:
-    from litemake.compile.compilers import AbstractCompiler
+    from litemake.compile.compilers import AbstractCompiler  # pragma: no cover
 
 
 class _TestCompiler(ABC):
