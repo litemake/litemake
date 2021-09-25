@@ -75,11 +75,3 @@ class litemakePrinter:
         special = f'{Color.RED}{Color.BOLD}%s{Color.RESET}'
         error = cls.replace_special(error, special)
         cls.print(error)
-
-    @classmethod
-    def command(cls, cmd: typing.List[str]) -> None:
-        """ Called by the 'compiler' object when a compelation process begins. """
-        cls.debug('\n'.join((
-            '*executing command:*',
-            ' '.join(cmd),
-        )))
