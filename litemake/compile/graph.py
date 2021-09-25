@@ -81,11 +81,12 @@ class ArchiveDependentFileNode(CompilationFileNode):
                  parent,
                  ) -> None:
         super().__init__(dest, compiler, parent)
-        self.dep_archives: typing.Set['ArchiveFileNode'] = set()
+        self.dep_archives: typing.List['ArchiveFileNode'] = list()
 
     def add_dep_archive(self, node: 'ArchiveFileNode') -> None:
         good = node not in self.dep_archives
-        if good: self.dep_archives.add(node)  # noqa: E701
+        if good:
+            self.dep_archives.append(node)
         return good
 
 
@@ -99,16 +100,17 @@ class ArchiveFileNode(ArchiveDependentFileNode):
                  parent: 'ExecutableFileNode' = None,
                  ) -> None:
         super().__init__(dest, compiler, parent=parent)
-        self.dep_objects: typing.Set['ObjectFileNode'] = set()
+        self.dep_objects: typing.List['ObjectFileNode'] = list()
 
     @property
     def is_empty(self) -> bool:
         """ Returns True if there are no object or archives inside this archive. """
-        return not set().union(self.dep_objects, self.dep_archives)
+        return len(self.dep_archives) + len(self.dep_objects) == 0
 
     def add_object(self, node: 'ObjectFileNode') -> None:
         good = node not in self.dep_objects
-        if good: self.dep_objects.add(node)  # noqa: E701
+        if good:
+            self.dep_objects.append(node)
         return good
 
     def generate(self,) -> None:
@@ -120,7 +122,7 @@ class ArchiveFileNode(ArchiveDependentFileNode):
     def outdated_subtree(self,) -> bool:
         return self.outdated or any(
             dep.outdated_subtree
-            for dep in self.dep_archives.union(self.dep_objects)
+            for dep in self.dep_archives + self.dep_objects
         )
 
     def all_nodes(self,) -> typing.Generator['CompilationFileNode', None, None]:

@@ -121,7 +121,7 @@ class ProjectFolder(Folder):
                 glb = os.path.join(self.settings.home, glb)
 
             sources += [
-                g for g in glob(glb, recursive=True)
+                g for g in sorted(glob(glb, recursive=True))
                 if os.path.isfile(g)
             ]
 
