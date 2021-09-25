@@ -19,21 +19,19 @@ class CompilationFileNode(ABC):
         self.parent = parent
 
     @abstractmethod
-    def generate_myself(self,) -> None:
+    def generate(self,) -> None:
         """ A method that generates (compiles) the current node only.
         It assumes that the dependencies are already generated. """
 
-    @abstractmethod
-    def generate_all(self,) -> typing.List['CompilationFileNode']:
-        """ A method that generates the subtree of the node (generates
-        dependencies first, and only then regenerates this).
-        This method also checks if the regeneration is required using the
-        'required_regen' property, and skips regeneration of up to date
-        dependencies. Returns a list of all nodes that were regenerated. """
+    @property
+    def outdated(self,) -> bool:
+        return not os.path.exists(self.dest)
 
     @property
-    def required_regen(self,) -> bool:
-        return not os.path.exists(self.dest)
+    @abstractmethod
+    def outdated_subtree(self,) -> bool:
+        """ True at least one node in the subtree that this node is the head
+        node in is outdated, or if this node is outdated. """
 
     @abstractmethod
     def all_nodes(self,) -> typing.Generator['CompilationFileNode', None, None]:
@@ -56,20 +54,18 @@ class ObjectFileNode(CompilationFileNode):
         self.src = src
         self.includes = includes
 
-    def generate_myself(self,) -> None:
+    def generate(self,) -> None:
         os.makedirs(os.path.dirname(self.dest), exist_ok=True)
         self.compiler.create_obj(self.src, self.dest, self.includes)
 
-    def generate_all(self) -> typing.List['CompilationFileNode']:
-        if self.required_regen:
-            self.generate_myself()  # noqa: E701
-            return [self]
-        return list()
+    @property
+    def outdated(self,) -> bool:
+        return (super().outdated or
+                os.path.getmtime(self.src) > os.path.getmtime(self.dest))
 
     @property
-    def required_regen(self,) -> bool:
-        return (super().required_regen or
-                os.path.getmtime(self.src) > os.path.getmtime(self.dest))
+    def outdated_subtree(self,) -> bool:
+        return self.outdated
 
     def all_nodes(self,) -> typing.Generator['CompilationFileNode', None, None]:
         # There are no nodes that are dependent on an object file, and thus
@@ -115,25 +111,17 @@ class ArchiveFileNode(ArchiveDependentFileNode):
         if good: self.dep_objects.add(node)  # noqa: E701
         return good
 
-    def generate_all(self,) -> typing.List['CompilationFileNode']:
-        generated = list()
-
-        for arc in self.dep_archives:
-            generated += arc.generate_all()
-
-        for obj in self.dep_objects:
-            generated += obj.generate_all()
-
-        if not self.is_empty and (generated or self.required_regen):
-            self.generate_myself()
-            generated.append(self)
-
-        return generated
-
-    def generate_myself(self,) -> None:
+    def generate(self,) -> None:
         os.makedirs(os.path.dirname(self.dest), exist_ok=True)
         objs = [obj.dest for obj in self.dep_objects]
         self.compiler.create_archive(self.dest, objs)
+
+    @property
+    def outdated_subtree(self,) -> bool:
+        return self.outdated or any(
+            dep.outdated_subtree
+            for dep in self.dep_archives.union(self.dep_objects)
+        )
 
     def all_nodes(self,) -> typing.Generator['CompilationFileNode', None, None]:
         for dep in self.dep_archives:
@@ -158,22 +146,17 @@ class ExecutableFileNode(ArchiveDependentFileNode):
     def is_empty(self,) -> bool:
         return all(a.is_empty for a in self.dep_archives)
 
-    def generate_all(self,) -> typing.List['CompilationFileNode']:
-        generated = list()
-
-        for arc in self.dep_archives:
-            generated += arc.generate_all()
-
-        if not self.is_empty and (generated or self.required_regen):
-            self.generate_myself()
-            generated.append(self)
-
-        return generated
-
-    def generate_myself(self,) -> None:
+    def generate(self,) -> None:
         os.makedirs(os.path.dirname(self.dest), exist_ok=True)
         deps = [arc.dest for arc in self.dep_archives]
         self.compiler.create_executable(self.dest, deps)
+
+    @property
+    def outdated_subtree(self,) -> bool:
+        return self.outdated or any(
+            dep.outdated_subtree
+            for dep in self.dep_archives
+        )
 
     def all_nodes(self,) -> typing.Generator['CompilationFileNode', None, None]:
         for dep in self.dep_archives:
