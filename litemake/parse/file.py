@@ -1,6 +1,10 @@
 import toml
 from abc import ABC
-from litemake.exceptions import litemakeParsingError, litemakeTemplateError
+from litemake.exceptions import (
+    litemakeParsingError,
+    litemakeTemplateError,
+    litemakeFileNotFoundError,
+)
 
 import typing
 if typing.TYPE_CHECKING:
@@ -32,6 +36,9 @@ class FileParser(ABC):
                 col=err.colno,
                 msg=err.msg,
             ) from None
+
+        except FileNotFoundError:
+            raise litemakeFileNotFoundError(filepath) from None
 
         # Validate loaded data
         try:

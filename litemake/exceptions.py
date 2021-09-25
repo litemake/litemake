@@ -68,13 +68,13 @@ class litemakeParsingError(litemakeError):
         )
 
 
-class litemakeSetupFileNotFoundError(litemakeError):
+class litemakeFileNotFoundError(litemakeError):
     """ Raised if the default (`package.litemake.toml`) setup configuration
     file isn't present or if the custom file (specified with the -f/--flags
     arguments) isn't found. """
 
     def __init__(self, filename: str):
-        super().__init__(f'*setup file {filename!r} not found*')
+        super().__init__(f'*file {filename!r} not found*')
 
 
 class litemakeCompilationError(litemakeError):
