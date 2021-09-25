@@ -103,11 +103,13 @@ class ProjectFolder(Folder):
         relashionships between source files, object files, archives, and
         executables in the program. """
 
+        compiler = self.settings.compiler()
+
         # Each litemake target is compiled into an archive, and thus it is the
         # first instance that we create.
         archive = ArchiveFileNode(
             dest=self.output.archive_name(target),
-            compiler=self.settings.compiler,
+            compiler=compiler,
         )
 
         # Now, its time to collect all needed source files
@@ -130,7 +132,7 @@ class ProjectFolder(Folder):
             obj = ObjectFileNode(
                 src=source,
                 dest=self.output.object_name(target, rel),
-                compiler=self.settings.compiler,
+                compiler=compiler,
                 includes=target.include,
                 parent=archive,
             )
@@ -144,7 +146,7 @@ class ProjectFolder(Folder):
             # too and return it instead of the archive.
             exe = ExecutableFileNode(
                 dest=os.path.join(os.getcwd(), target.name),
-                compiler=self.settings.compiler,
+                compiler=compiler,
             )
             archive.set_parent(exe)
             exe.add_dep_archive(archive)
