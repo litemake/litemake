@@ -80,7 +80,7 @@ class StringTemplate(TemplateEndpoint):
 class FolderPathTemplate(StringTemplate):
 
     def __init__(self, must_exist: bool = False, default=MISSING):
-        super().__init__(min_len=1, default=default)
+        super().__init__(default=default)
         self.must_exist = must_exist
 
     def validate(self, value, fieldpath: typing.List[str]):

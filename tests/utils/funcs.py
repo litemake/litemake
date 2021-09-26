@@ -1,4 +1,5 @@
 import os
+import subprocess
 
 
 def matching_msg(expected: str, got: str) -> bool:
@@ -37,3 +38,12 @@ class change_cwd:
         if self.oldcwd:
             os.chdir(self.oldcwd)
             self.oldcwd = None
+
+
+def execute(*cmd: str) -> str:
+    """ Executes the given command, asserts that the return code is zero and
+    returns the captured stdout stream. """
+
+    result = subprocess.run(*cmd, capture_output=True, text=True)
+    assert result.returncode == 0, "Return code of compiled program isn't 0"
+    return result.stdout

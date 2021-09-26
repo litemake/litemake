@@ -1,11 +1,12 @@
-from litemake.__main__ import make
-import litemake.exceptions
-
+import os
+import typing
 from inspect import cleandoc
-import os.path
 
 from slugify import slugify
+import tests.utils
 
+from litemake.__main__ import make
+import litemake.exceptions
 from litemake.constants import (
     PACKAGE_CONFIG_FILENAME,
     TARGETS_CONFIG_FILENAME,
@@ -53,3 +54,10 @@ class VirtualProject:
     def add_settings_file(self, content: str, path: str = None) -> str:
         path = path or SETTINGS_FILENAME
         return self.add_file(path, content)
+
+    def join(self, *paths) -> str:
+        return os.path.join(self.basepath, *paths)
+
+    def run(self, *targets: typing) -> None:
+        with tests.utils.change_cwd(self.basepath):
+            make(*targets)
