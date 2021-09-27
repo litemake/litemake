@@ -1,6 +1,5 @@
 import pytest
 from tests.utils import VirtualProject
-
 from slugify import slugify
 
 

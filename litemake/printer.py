@@ -32,10 +32,6 @@ class litemakePrinter:
     TITLE = Color.BOLD + Color.BLUE + 'litemake:' + Color.RESET
     PADDING = ' ' * 2
 
-    @classmethod
-    def set_verbose(cls, value: bool) -> None:
-        cls.verbose = value
-
     @staticmethod
     def replace_special(original: str, repl: str):
         return re.sub(r'\*(.*?)\*', repl.replace('%s', r'\g<1>'), original)
@@ -53,10 +49,9 @@ class litemakePrinter:
 
     @classmethod
     def debug(cls, info: str) -> None:
-        if cls.verbose:
-            msg = cls.replace_special(
-                info, f'{Color.BOLD}%s{Color.RESET}{Color.GREY}')
-            cls.print(f'{Color.GREY}{msg}{Color.RESET}')
+        msg = cls.replace_special(
+            info, f'{Color.BOLD}%s{Color.RESET}{Color.GREY}')
+        cls.print(f'{Color.GREY}{msg}{Color.RESET}')
 
     @classmethod
     def info(cls, info: str) -> None:
@@ -80,11 +75,3 @@ class litemakePrinter:
         special = f'{Color.RED}{Color.BOLD}%s{Color.RESET}'
         error = cls.replace_special(error, special)
         cls.print(error)
-
-    @classmethod
-    def command(cls, cmd: typing.List[str]) -> None:
-        """ Called by the 'compiler' object when a compelation process begins. """
-        cls.debug('\n'.join((
-            '*executing command:*',
-            ' '.join(cmd),
-        )))

@@ -1,116 +1,51 @@
 import typing
-
-from .target import TargetCompiler
-from .output import OutputFolder
-
-from litemake.printer import litemakePrinter as Printer
-from .graph import (
-    ObjectFileNode,
-    ArchiveFileNode,
-    ExecutableFileNode,
-)
-
 if typing.TYPE_CHECKING:
-    from .compilers import AbstractCompiler
     from .graph import CompilationFileNode
+    from .status import NodeCompilationStatus
+
+from .status import (
+    NodeFailed,
+    NodePassed,
+    NodeSkipped,
+)
+from litemake.exceptions import litemakeCompilationError
+
+from functools import cached_property
 
 
-def type_filter(instances, filter: type) -> tuple:
-    return tuple(
-        i for i in instances
-        if isinstance(i, filter)
-    )
+class NodesCollector:
 
+    def __init__(self, tree: 'CompilationFileNode') -> None:
+        self._queue = (n for n in tree.all_nodes() if n.outdated_subtree)
+        self._status = dict()
 
-class TargetsCollection:
+    @property
+    def count(self,) -> int:
+        """ The number of nodes in the whole tree. """
+        return len(self.nodes)
 
-    def __init__(self,
-                 package: str,
-                 version: typing.Tuple[int, int, int],
-                 basepath: str,
-                 outpath: str,
-                 compiler: 'AbstractCompiler',
-                 ) -> None:
-        self.package = package
-        self.version = version
-        self.basepath = basepath
-        self.outpath = outpath
-        self.compiler = compiler
-        self.targets = list()
+    def pop_next(self,) -> 'CompilationFileNode':
+        """ Pops the next node that should be compiled outside of the queue,
+        and returns it. If the queue is empty, returns `None`. """
 
-    def collect(self,
-                target: str,
-                library: bool,
-                sources: typing.List[str],
-                includes: typing.List[str],
-                ) -> None:
-        self.targets.append(
-            TargetCompiler(
-                package=self.package,
-                target=target,
-                version=self.version,
-                isexec=not library,
-                basepath=self.basepath,
-                sources=sources,
-                includes=includes,
-                compiler=self.compiler,
-            )
-        )
+        try:
+            return next(self._queue)
+        except StopIteration:
+            return None
 
-    def make(self) -> None:
-        out = OutputFolder(self.outpath)
-        generated: typing.List['CompilationFileNode'] = list()
+    def generate(self, node: 'CompilationFileNode') -> 'NodeCompilationStatus':
+        if self._status.get(node) is None:
+            try:
+                node.generate()
 
-        for target in self.targets:
-            target: TargetCompiler
-            graph = target.build_graph(out)
-            generated += graph.generate_all()
+            except litemakeCompilationError:
+                self._status[node] = NodeFailed
+                temp = node
+                while temp.parent is not None:
+                    self._status[temp.parent] = NodeSkipped
+                    temp = temp.parent
 
-        self._print_generated_summary(generated)
+            else:
+                self._status[node] = NodePassed
 
-    @staticmethod
-    def _print_generated_summary(
-            generated: typing.List['CompilationFileNode']) -> None:
-
-        if not generated:
-            Printer.summary(
-                '*summary:* everything up-to-date! (no files generated)')
-
-        else:
-
-            # print a list of generated file paths, if debug verbose enabled.
-
-            debug = (
-                f'*{index}:* {node.dest}'
-                for index, node in enumerate(generated, start=1)
-            )
-
-            Printer.debug('\n'.join((
-                '*all generated files, in order of generation:*',
-                *debug,
-            )))
-
-            # print a short summary and count generated objects, archives,
-            # and executables.
-
-            filters = {
-                'object(s)': ObjectFileNode,
-                'archive(s)': ArchiveFileNode,
-                'executable(s)': ExecutableFileNode,
-            }
-
-            filtered_nodes = {
-                name: type_filter(generated, cls)
-                for name, cls in filters.items()
-            }
-
-            summary = (
-                f'*{len(nodes)}* {name}'
-                for name, nodes in filtered_nodes.items()
-                if len(nodes) != 0
-            )
-
-            Printer.summary('\n'.join((
-                f'*summary:* generated *{len(generated)!r}* file(s):',
-                *summary,
-            )))
+        return self._status[node]

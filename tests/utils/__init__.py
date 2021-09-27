@@ -4,4 +4,5 @@ from .named import PASS, FAIL
 from .funcs import (
     matching_msg,
     change_cwd,
+    execute,
 )
