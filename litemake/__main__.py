@@ -15,10 +15,12 @@ def make(*targets: typing.Tuple[str]):
 
     for graph in graphs:
         collector = NodesCollector(graph)
-        while (node := collector.pop_next()) is not None:
-            node: 'CompilationFileNode'
+        node = collector.pop_next()
+
+        while node is not None:
             result = collector.generate(node)
             print(result.color + node.dest)
+            node = collector.pop_next()
 
 
 def main():
