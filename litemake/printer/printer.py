@@ -3,7 +3,6 @@
     A class that takes care of all printing done by litemake. '''
 
 import re
-import typing
 
 
 class Color:

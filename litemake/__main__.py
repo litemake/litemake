@@ -7,6 +7,7 @@ import sys
 
 from litemake.folders import ProjectFolder
 from litemake.compile import NodesCollector
+from litemake.printer import DefaultProgressPrinter
 
 
 def make(*targets: typing.Tuple[str]):
@@ -15,10 +16,13 @@ def make(*targets: typing.Tuple[str]):
 
     for graph in graphs:
         collector = NodesCollector(graph)
+        progress = DefaultProgressPrinter(
+            collector.count_total, collector.count_outdated)
         while (node := collector.pop_next()) is not None:
             node: 'CompilationFileNode'
             result = collector.generate(node)
-            print(result.color + node.dest)
+            progress.register_status(node, result)
+            print(progress)
 
 
 def main():
