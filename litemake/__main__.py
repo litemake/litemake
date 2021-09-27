@@ -1,4 +1,6 @@
 import typing
+if typing.TYPE_CHECKING:
+    from litemake.compile.graph import CompilationFileNode
 
 import os
 import sys
@@ -12,8 +14,11 @@ def make(*targets: typing.Tuple[str]):
     graphs = project.collect(*targets)
 
     for graph in graphs:
-        for node in NodesCollector(graph).outdated_nodes():
-            node.generate()
+        collector = NodesCollector(graph)
+        while (node := collector.pop_next()) is not None:
+            node: 'CompilationFileNode'
+            result = collector.generate(node)
+            print(result.color + node.dest)
 
 
 def main():
