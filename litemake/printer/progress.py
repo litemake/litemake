@@ -8,7 +8,7 @@ import typing
 if typing.TYPE_CHECKING:
     from litemake.compile.graph import CompilationFileNode
 
-from .printer import Color
+from .printer import Color, get_terminal_width
 from litemake.compile.status import NodeCompilationStatus
 
 
@@ -104,8 +104,7 @@ class DefaultProgressPrinter(ProgressPrinter):
         current_precentage = int(proccessed / self._total * 100)
         end = f' {current_precentage:>3}%'
 
-        terminal_width = os.get_terminal_size().columns
-        blocks_amount = max((0, terminal_width - len(start + end)))
+        blocks_amount = max((0, get_terminal_width() - len(start + end)))
 
         blocks = self.__generate_blocks(blocks_amount)
         return start + blocks + end
