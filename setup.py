@@ -13,7 +13,7 @@ setup(
     name="litemake",
     version='0.1.0',
     description='A new way to build, test and distribute your C/C++ projects and libraries 🚀',
-    python_requires='>=3.9,<4',
+    python_requires='>=3.6,<4',
 
     long_description=README,
     long_description_content_type='text/markdown',
