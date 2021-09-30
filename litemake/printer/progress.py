@@ -98,11 +98,11 @@ class DefaultProgressPrinter(ProgressPrinter):
 
         precompiled = self._total - self._outdates
         start_precentage = int(precompiled / self._total * 100)
-        start = f'{start_precentage:>3}% '
+        start = f'{start_precentage}%'.ljust(4)
 
         proccessed = precompiled + len(self._history)
         current_precentage = int(proccessed / self._total * 100)
-        end = f' {current_precentage:>3}%'
+        end = f'{current_precentage}%'.rjust(5)
 
         blocks_amount = max((0, get_terminal_width() - len(start + end)))
 
