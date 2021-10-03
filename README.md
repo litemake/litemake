@@ -18,9 +18,11 @@ By configuration a simple `package.litemake.toml` file, **litemake** will be abl
 - Build and run your tests
 - And more!
 
+With additional (simple and short) configuration files like `settings.litemake.toml` and `package.litemake.toml` you will be able to publish your package or project, and make it avaliable to other users and developers.
+
 ## The vision behind litemake
 
-There is a common phrase among the C/C++ developer community: *"(The convention) doesn't matter, just be consistent"* <sup>[1]</sup>. I however, strongly believe that a good convention is one that allows the developer to implement whatever he wants, but also allows others easily understand the intensions of the former. A good convention won't limit the developer, but will guide him.
+There is a common phrase among the C/C++ developer community: *"(The convention) doesn't matter, just be consistent"* [^1]. I however, strongly believe that a good convention is one that allows the developer to implement whatever he wants, but also allows others easily understand the intensions of the former. A good convention won't limit the developer, but will guide him.
 
 ### Compering to other programming languages
 
@@ -32,19 +34,7 @@ Other programming languages (mostly high-level ones like *Python* or *JavaScript
 
 Furthermore, with tools like [nanotest] you will be able to automatically build and run your tests. The sky is really the limit!
 
----
-
-<div align="center">
-    [learn more]
-•   [documentation]
-•   [nanotest]
-•   [contribute]
-</div>
 
 <!-- Links -->
 
-[toml]: https://toml.io/en/v1.0.0
-[semver]: https://semver.org/
-[nanotest]: link/to/nanotest
-
-[1]: https://api.csswg.org/bikeshed/?force=1&url=https://raw.githubusercontent.com/vector-of-bool/pitchfork/develop/data/spec.bs#intro
+[^1]: https://api.csswg.org/bikeshed/?force=1&url=https://raw.githubusercontent.com/vector-of-bool/pitchfork/develop/data/spec.bs#intro
