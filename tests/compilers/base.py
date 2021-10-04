@@ -26,7 +26,7 @@ class _TestCompiler(ABC):
         result = subprocess.run(
             *cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         assert result.returncode == 0, "Return code of compiled program isn't 0"
-        return result.stdout
+        return result.stdout.decode('utf8')
 
 
 def required_clis_exists(compiler: 'AbstractCompiler') -> bool:
