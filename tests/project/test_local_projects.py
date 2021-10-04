@@ -1,6 +1,3 @@
-import os
-import pytest
-
 import typing
 if typing.TYPE_CHECKING:
     from tests.utils import VirtualProject
@@ -35,4 +32,4 @@ def test_basic_hello_world(project: 'VirtualProject'):
     project.add_settings_file('')
 
     project.run('build')
-    assert execute(project.join('build')) == 'Hello from litemake!\n'
+    assert execute(project.join('build')) == b'Hello from litemake!\n'
