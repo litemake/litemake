@@ -13,7 +13,8 @@ class AbstractCompiler(ABC):
         from the subprocess is a non-zero one. """
 
         result = subprocess.run(
-            cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+            universal_newlines=True)
 
         if result.returncode != 0:
             raise litemakeCompilationError(

@@ -45,6 +45,8 @@ def execute(*cmd: str) -> str:
     returns the captured stdout stream. """
 
     result = subprocess.run(
-        *cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        *cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+        universal_newlines=True,
+    )
     assert result.returncode == 0, "Return code of compiled program isn't 0"
     return result.stdout

@@ -24,9 +24,10 @@ class _TestCompiler(ABC):
         zero, and returns the captured stdout stream, as a string. """
 
         result = subprocess.run(
-            *cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            *cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+            universal_newlines=True)
         assert result.returncode == 0, "Return code of compiled program isn't 0"
-        return result.stdout.decode('utf8')
+        return result.stdout
 
 
 def required_clis_exists(compiler: 'AbstractCompiler') -> bool:
