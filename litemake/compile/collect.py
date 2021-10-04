@@ -10,9 +10,6 @@ from .status import (
     NodeSkipped,
 )
 
-from functools import lru_cache
-cached_property = property(lru_cache(maxsize=None))
-
 
 class NodesCollector:
 
@@ -24,7 +21,7 @@ class NodesCollector:
             [n for n in self._tree if n.outdated_subtree]
         )
 
-    @cached_property
+    @property
     def count_total(self,) -> int:
         """ The number of nodes in the whole tree. """
         return len(self._tree)
