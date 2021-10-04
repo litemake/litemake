@@ -1,12 +1,11 @@
 import typing
-if typing.TYPE_CHECKING:
-    from litemake.compile.graph import CompilationFileNode
 
 import os
 import sys
 
 from litemake.folders import ProjectFolder
 from litemake.compile import NodesCollector
+from litemake.printer import DefaultProgressPrinter
 
 
 def make(*targets: typing.Tuple[str]):
@@ -15,12 +14,15 @@ def make(*targets: typing.Tuple[str]):
 
     for graph in graphs:
         collector = NodesCollector(graph)
-        node = collector.pop_next()
+        progress = DefaultProgressPrinter(
+            collector.count_total, collector.count_outdated)
 
+        node = collector.pop_next()
         while node is not None:
-            result = collector.generate(node)
-            print(result.color + node.dest)
+            status = collector.generate(node)
+            progress.register_status(node, status)
             node = collector.pop_next()
+            print(progress)
 
 
 def main():

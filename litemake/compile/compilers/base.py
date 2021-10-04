@@ -12,7 +12,9 @@ class AbstractCompiler(ABC):
         and runs it in a new subprocess. Raises an error if the return code
         from the subprocess is a non-zero one. """
 
-        result = subprocess.run(cmd, capture_output=True, text=True)
+        result = subprocess.run(
+            cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+            universal_newlines=True)
 
         if result.returncode != 0:
             raise litemakeCompilationError(

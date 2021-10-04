@@ -4,6 +4,24 @@ from litemake.printer import Color
 
 class NodeCompilationStatus(ABC):
 
+    __statuses = set()
+
+    def __init_subclass__(cls):
+        NodeCompilationStatus.__statuses.add(cls)
+
+    @staticmethod
+    def registered_statuses():
+        """ Returns all nodes that have been registered (inherited from
+        the 'NodeCompilationStatus' class) in their order of priority (
+        lowest priority first). """
+        return sorted(NodeCompilationStatus.__statuses,
+                      key=lambda node: node.priority)
+
+    @property
+    @abstractclassmethod
+    def title(self,) -> str:
+        """ A string that represents the title (name) of the status. """
+
     @property
     @abstractclassmethod
     def color(self,) -> str:
@@ -22,15 +40,18 @@ class NodeCompilationStatus(ABC):
 
 
 class NodePassed(NodeCompilationStatus):
+    title: str = 'passed'
     color: str = Color.GREEN
     priority: int = 0
 
 
 class NodeSkipped(NodeCompilationStatus):
+    title: str = 'skipped'
     color: str = Color.YELLOW
     priority: int = 128
 
 
 class NodeFailed(NodeCompilationStatus):
+    title: str = 'failed'
     color: str = Color.RED
     priority: int = 256

@@ -3,27 +3,34 @@ if typing.TYPE_CHECKING:
     from .graph import CompilationFileNode
     from .status import NodeCompilationStatus
 
+import litemake.exceptions
 from .status import (
     NodeFailed,
     NodePassed,
     NodeSkipped,
 )
-from litemake.exceptions import litemakeCompilationError
-
-from functools import lru_cache
-cached_property = property(lru_cache(maxsize=None))
 
 
 class NodesCollector:
 
     def __init__(self, tree: 'CompilationFileNode') -> None:
-        self._queue = (n for n in tree.all_nodes() if n.outdated_subtree)
+        self._tree = list(tree.all_nodes())
         self._status = dict()
+        self._queue = (
+            m for m in
+            [n for n in self._tree if n.outdated_subtree]
+        )
 
     @property
-    def count(self,) -> int:
+    def count_total(self,) -> int:
         """ The number of nodes in the whole tree. """
-        return len(self.nodes)
+        return len(self._tree)
+
+    @property
+    def count_outdated(self,) -> int:
+        """ The nubmer of outdated nodes that need to be regenerated in the
+        tree. """
+        return sum(True for n in self._tree if n.outdated_subtree)
 
     def pop_next(self,) -> 'CompilationFileNode':
         """ Pops the next node that should be compiled outside of the queue,
@@ -39,7 +46,7 @@ class NodesCollector:
             try:
                 node.generate()
 
-            except litemakeCompilationError:
+            except litemake.exceptions.litemakeCompilationError:
                 self._status[node] = NodeFailed
                 temp = node
                 while temp.parent is not None:
@@ -48,5 +55,4 @@ class NodesCollector:
 
             else:
                 self._status[node] = NodePassed
-
         return self._status[node]

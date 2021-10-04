@@ -3,7 +3,18 @@
     A class that takes care of all printing done by litemake. '''
 
 import re
-import typing
+import os
+
+
+def get_terminal_width() -> int:
+    """ A helper function that returns the current terminal width. If 'stout'
+    is redirected and there is no real terminal window, the returned value
+    default value be 80. """
+
+    try:
+        return os.get_terminal_size().columns
+    except OSError:
+        return 80  # the default and standard width.
 
 
 class Color:

@@ -1,6 +1,3 @@
-import os
-import pytest
-
 import typing
 if typing.TYPE_CHECKING:
     from tests.utils import VirtualProject
