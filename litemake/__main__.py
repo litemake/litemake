@@ -24,7 +24,6 @@ def make(*targets: typing.Tuple[str]):
             progress.register_status(node, result)
             print(progress)
 
-
 def main():
     args = sys.argv[1:]
     make(*args)

@@ -10,7 +10,8 @@ from .status import (
     NodeSkipped,
 )
 
-from functools import cached_property
+from functools import lru_cache
+cached_property = property(lru_cache(maxsize=None))
 
 
 class NodesCollector:
