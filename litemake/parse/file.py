@@ -1,5 +1,5 @@
 import toml
-from abc import ABC
+from abc import ABC, abstractclassmethod
 from litemake.exceptions import (
     litemakeParsingError,
     litemakeTemplateError,
@@ -16,17 +16,15 @@ class FileParser(ABC):
     with a given and pre-defined template. """
 
     @property
-    @classmethod
+    @abstractclassmethod
     def TEMPLATE(cls) -> 'BaseTemplate':
         """ A Template that is being used to validate data in the file. """
 
-    def __init__(self, filepath: str):
-        self.__filepath = filepath
-
+    def __load_toml_file(self, filepath: str) -> dict:
         # Load TOML file into Python objects
         try:
             with open(filepath, mode='r', encoding='utf8') as file:
-                data = toml.load(file)
+                return toml.load(file)
 
         # Raise a custom error if failed to parse TOML file
         except toml.TomlDecodeError as err:
@@ -40,13 +38,18 @@ class FileParser(ABC):
         except FileNotFoundError:
             raise litemakeFileNotFoundError(filepath) from None
 
-        # Validate loaded data
-        try:
-            self._data = self.TEMPLATE.validate(data, fieldpath=list())
+    def __validate_data(self, data: dict) -> dict:
+        try:  # Validate loaded data
+            return self.TEMPLATE.validate(data, fieldpath=list())
 
-        # Raise a custom configuration error if validation faileds
         except litemakeTemplateError as err:
-            raise err.to_config_error(filepath)
+            # Raise a custom configuration error if validation faileds
+            raise err.to_config_error(self.filepath)
+
+    def __init__(self, filepath: str):
+        self.__filepath = filepath
+        data = self.__load_toml_file(filepath)
+        self._data = self.__validate_data(data)
 
     @property
     def filepath(self,) -> str:
