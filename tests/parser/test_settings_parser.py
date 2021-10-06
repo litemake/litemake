@@ -1,6 +1,7 @@
-import os
 from litemake.parse import SettingsParser
+from litemake.constants import SETTINGS_FILENAME, CACHE_FOLDERNAME
 
+from tests.utils import change_cwd
 
 import typing
 if typing.TYPE_CHECKING:
@@ -12,10 +13,12 @@ def test_default_settings(project: 'VirtualProject'):
     # file shouldn't be mandetory.
 
     path = project.add_settings_file('')  # empty settings file
-    info = SettingsParser(path)
-    assert info.home == os.getcwd()
-    assert info.output == os.path.join(project.basepath, '.litemake/')
-    assert info.compiler.name == 'g++'
+
+    with change_cwd(project.basepath):
+        info = SettingsParser(path)
+        assert info.home == project.basepath
+        assert info.output == project.join(CACHE_FOLDERNAME)
+        assert info.compiler.name == 'g++'
 
 
 def test_absolute_paths(project: 'VirtualProject'):
@@ -44,3 +47,11 @@ def test_relative_paths(project: 'VirtualProject'):
     info = SettingsParser(path)
     assert info.home == src
     assert info.output == out
+
+
+def test_no_settings_file(project: 'VirtualProject'):
+    with change_cwd(project.basepath):
+        info = SettingsParser(project.join(SETTINGS_FILENAME))
+        assert info.home == project.basepath
+        assert info.output == project.join(CACHE_FOLDERNAME)
+        assert info.compiler.name == 'g++'
