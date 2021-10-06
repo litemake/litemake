@@ -20,7 +20,7 @@ class FileParser(ABC):
     def TEMPLATE(cls) -> 'BaseTemplate':
         """ A Template that is being used to validate data in the file. """
 
-    def __load_toml_file(self, filepath: str) -> dict:
+    def _load_toml_file(self, filepath: str) -> dict:
         # Load TOML file into Python objects
         try:
             with open(filepath, mode='r', encoding='utf8') as file:
@@ -38,7 +38,7 @@ class FileParser(ABC):
         except FileNotFoundError:
             raise litemakeFileNotFoundError(filepath) from None
 
-    def __validate_data(self, data: dict) -> dict:
+    def _validate_data(self, data: dict) -> dict:
         try:  # Validate loaded data
             return self.TEMPLATE.validate(data, fieldpath=list())
 
@@ -47,11 +47,29 @@ class FileParser(ABC):
             raise err.to_config_error(self.filepath)
 
     def __init__(self, filepath: str):
-        self.__filepath = filepath
-        data = self.__load_toml_file(filepath)
-        self._data = self.__validate_data(data)
+        self._filepath = filepath
+        raw = self._load_toml_file(filepath)
+        self._data = self._validate_data(raw)
 
     @property
     def filepath(self,) -> str:
         """ The path to the current configuration TOML file. """
-        return self.__filepath
+        return self._filepath
+
+
+class OptionalFileParser(FileParser):
+    """ An abstract file parser that loads a TOML file and validates its content
+    with a given and pre-defined template. If it tries to load a files that
+    doesn't exist, doesn't raise an error and loads the default configuration
+    from the template. """
+
+    def _load_toml_file(self, filepath: str) -> dict:
+        try:
+            return super()._load_toml_file(filepath)
+
+        except litemakeFileNotFoundError:
+            # If the file doesn't exist, loads an empty dict as the data.
+            # Assumes that the 'validate_data' method will load the default
+            # values into the configuration files, and assumes that an empty
+            # dict is a valid configuration.
+            return dict()

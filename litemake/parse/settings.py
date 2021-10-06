@@ -1,6 +1,6 @@
 import os
 
-from .file import FileParser
+from .file import OptionalFileParser
 from .templates import Template
 from .endpoints import (
     FolderPathTemplate,
@@ -12,7 +12,7 @@ if typing.TYPE_CHECKING:
     from litemake.compile.compilers.base import AbstractCompiler  # pragma: no cover
 
 
-class SettingsParser(FileParser):
+class SettingsParser(OptionalFileParser):
 
     TEMPLATE = Template(
         home=FolderPathTemplate(default=''),
