@@ -1,22 +1,24 @@
 import os
 
-from .file import FileParser
+from .file import OptionalFileParser
 from .templates import Template
 from .endpoints import (
     FolderPathTemplate,
     CompilerTemplate,
 )
 
+from litemake.constants import CACHE_FOLDERNAME
+
 import typing
 if typing.TYPE_CHECKING:
     from litemake.compile.compilers.base import AbstractCompiler  # pragma: no cover
 
 
-class SettingsParser(FileParser):
+class SettingsParser(OptionalFileParser):
 
     TEMPLATE = Template(
         home=FolderPathTemplate(default=''),
-        output=FolderPathTemplate(default='.litemake/'),
+        output=FolderPathTemplate(default=CACHE_FOLDERNAME),
         compiler=CompilerTemplate(default='g++'),
     )
 
