@@ -34,6 +34,15 @@ Other programming languages (mostly high-level ones like *Python* or *JavaScript
 
 Furthermore, with tools like [nanotest] you will be able to automatically build and run your tests. The sky is really the limit!
 
+## Supported compilers and platforms
+
+Currently, supporting multiple platforms is not our main focus. **Litemake**
+is mainly designed for the Linux operation system and the Gnu compiler
+collection (GCC, G++). However, **litemake** is not designed to work *only* on
+Linux with those compilers, and thus it works on Windows, MacOS and with the
+Clang compiler family. That means that it is possible to run litemake with
+those compilers and on those systems, however you may encounter some errors
+and it is not recommended.
 
 <!-- Links -->
 
