@@ -46,19 +46,6 @@ jobs:
         with:
           python-version: ${{ matrix.py }}
 
-      - name: Cache LLVM and Clang 🔧
-        id: cache-llvm-clang
-        uses: actions/cache@v2
-        with:
-          path: C:/Program Files/LLVM
-          key: llvm
-
-      - name: Install LLVM and Clang 🖥️
-        uses: KyleMayes/install-llvm-action@v1
-        with:
-          version: 12
-          cached: ${{ steps.cache-llvm-clang.outputs.cache-hit }}
-
       - name: Install Package ✨
         run: make develop
 
