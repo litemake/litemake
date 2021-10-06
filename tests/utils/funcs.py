@@ -1,6 +1,8 @@
 import os
 import subprocess
+import platform
 
+import pytest
 
 def matching_msg(expected: str, got: str) -> bool:
     """ Checks if the 'got' string contains the 'expected' string. Returns
@@ -50,3 +52,23 @@ def execute(*cmd: str) -> str:
     )
     assert result.returncode == 0, "Return code of compiled program isn't 0"
     return result.stdout
+
+
+def skip_os(os_name: str):
+    """ A decorator that uses the 'pytest.mark.skipif' decorator and applies it
+    to the decorated test function/class if the current os matches the given os
+    string. """
+
+    def decorator(func):
+        sys = platform.system()
+        dec = pytest.mark.skipif(
+            sys.lower() == os_name.lower(),
+            reason=f"Operation system {sys} doesn't support this test",
+        )
+        return dec(func)
+    
+    return decorator
+
+skip_windows = skip_os("windows")
+skip_linux = skip_os("linux")
+skip_macos = skip_os("darwin")

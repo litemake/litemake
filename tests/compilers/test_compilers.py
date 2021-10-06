@@ -1,6 +1,6 @@
 import os
 
-from tests.utils import change_cwd
+from tests.utils import change_cwd, skip_windows
 
 import typing
 if typing.TYPE_CHECKING:
@@ -115,12 +115,13 @@ class TestGccCompiler(_TestCompilerC):
 class TestGplusplusCompiler(_TestCompilerCPP):
     COMPILER = Compiler('g++')
 
-
+@skip_windows
 @skip_if_missing_clis(ClangCompiler)
 class TestClangCompiler(_TestCompilerC):
     COMPILER = Compiler('clang')
 
 
+@skip_windows
 @skip_if_missing_clis(ClangplusplusCompiler)
 class TestClangplusplusCompiler(_TestCompilerCPP):
     COMPILER = Compiler('clang++')
