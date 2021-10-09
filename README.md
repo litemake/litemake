@@ -2,6 +2,7 @@
 
 <!-- Badges -->
 [![build](https://img.shields.io/github/workflow/status/litemake/litemake/%E2%9C%85%EF%B8%8F%20Test?logo=github)](https://github.com/litemake/litemake/actions/workflows/test.yaml)
+[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/litemake/litemake/master.svg)](https://results.pre-commit.ci/latest/github/litemake/litemake/master)
 [![codecov](https://img.shields.io/codecov/c/github/litemake/litemake?logo=codecov)](https://codecov.io/gh/litemake/litemake)
 
 <!-- Short description -->
