@@ -1,5 +1,4 @@
-name: 💡 CI
-
+name: CI
 on: [push, pull_request]
 
 jobs:
@@ -24,7 +23,7 @@ jobs:
         run: make install-compilers
 
       - name: Install Package ✨
-        run: make develop
+        run: make ci
 
       - name: Test 🎯
         run: make test
@@ -47,7 +46,7 @@ jobs:
           python-version: ${{ matrix.py }}
 
       - name: Install Package ✨
-        run: make develop
+        run: make ci
 
       - name: Test 🎯
         run: make test
@@ -69,7 +68,7 @@ jobs:
         run: make install-compilers
 
       - name: Install Package ✨
-        run: make develop
+        run: make ci
 
       - name: Test Coverage 🚀
         run: make cov
