@@ -4,4 +4,5 @@ pytest-cov>=2.12.0      # For coverage reports
 pytest-randomly>=3.9    # Randomly order tests
 
 # - - - MISC - - - #
-python-slugify>=5.0,<6.0  # Converting test names into filenames
+python-slugify>=5.0,<6.0    # Converting test names into filenames
+pre-commit>=2.0             # Running pytest and formatting before commiting

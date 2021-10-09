@@ -15,6 +15,7 @@ install-compilers:
 develop:
 	$(PY) -m pip install --upgrade pip
 	$(PY) -m pip install -e .[dev]
+	pre-commit install
 
 test:
 	$(PY) -m pytest --cov litemake/
