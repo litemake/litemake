@@ -7,23 +7,24 @@ from litemake.exceptions import (
 )
 
 import typing
+
 if typing.TYPE_CHECKING:
     from .templates import BaseTemplate  # pragma: no cover
 
 
 class FileParser(ABC):
-    """ An abstract file parser that loads a TOML file and validates its content
-    with a given and pre-defined template. """
+    """An abstract file parser that loads a TOML file and validates its content
+    with a given and pre-defined template."""
 
     @property
     @abstractclassmethod
-    def TEMPLATE(cls) -> 'BaseTemplate':
-        """ A Template that is being used to validate data in the file. """
+    def TEMPLATE(cls) -> "BaseTemplate":
+        """A Template that is being used to validate data in the file."""
 
     def _load_toml_file(self, filepath: str) -> dict:
         # Load TOML file into Python objects
         try:
-            with open(filepath, mode='r', encoding='utf8') as file:
+            with open(filepath, mode="r", encoding="utf8") as file:
                 return toml.load(file)
 
         # Raise a custom error if failed to parse TOML file
@@ -52,16 +53,18 @@ class FileParser(ABC):
         self._data = self._validate_data(raw)
 
     @property
-    def filepath(self,) -> str:
-        """ The path to the current configuration TOML file. """
+    def filepath(
+        self,
+    ) -> str:
+        """The path to the current configuration TOML file."""
         return self._filepath
 
 
 class OptionalFileParser(FileParser):
-    """ An abstract file parser that loads a TOML file and validates its content
+    """An abstract file parser that loads a TOML file and validates its content
     with a given and pre-defined template. If it tries to load a files that
     doesn't exist, doesn't raise an error and loads the default configuration
-    from the template. """
+    from the template."""
 
     def _load_toml_file(self, filepath: str) -> dict:
         try:

@@ -6,5 +6,5 @@ class named:
         return self.name
 
 
-PASS = named('PASS')
-FAIL = named('FAIL')
+PASS = named("PASS")
+FAIL = named("FAIL")
