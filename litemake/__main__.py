@@ -15,7 +15,8 @@ def make(*targets: typing.Tuple[str]):
     for graph in graphs:
         collector = NodesCollector(graph)
         progress = DefaultProgressPrinter(
-            collector.count_total, collector.count_outdated)
+            collector.count_total, collector.count_outdated
+        )
 
         node = collector.pop_next()
         while node is not None:
@@ -30,5 +31,5 @@ def main():
     make(*args)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

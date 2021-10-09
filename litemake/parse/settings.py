@@ -10,6 +10,7 @@ from .endpoints import (
 from litemake.constants import CACHE_FOLDERNAME
 
 import typing
+
 if typing.TYPE_CHECKING:
     from litemake.compile.compilers.base import AbstractCompiler  # pragma: no cover
 
@@ -17,16 +18,18 @@ if typing.TYPE_CHECKING:
 class SettingsParser(OptionalFileParser):
 
     TEMPLATE = Template(
-        home=FolderPathTemplate(default=''),
+        home=FolderPathTemplate(default=""),
         output=FolderPathTemplate(default=CACHE_FOLDERNAME),
-        compiler=CompilerTemplate(default='g++'),
+        compiler=CompilerTemplate(default="g++"),
     )
 
     @property
-    def home(self,) -> str:
-        """ The home directory in which litemake will run relative to.
-        The current working directory by default. """
-        path = self._data['home']
+    def home(
+        self,
+    ) -> str:
+        """The home directory in which litemake will run relative to.
+        The current working directory by default."""
+        path = self._data["home"]
 
         if not path:
             return os.getcwd()
@@ -39,12 +42,14 @@ class SettingsParser(OptionalFileParser):
             return os.path.join(folder, path)
 
     @property
-    def output(self,) -> str:
-        """ The directory in which litemake will store all compiled objects,
+    def output(
+        self,
+    ) -> str:
+        """The directory in which litemake will store all compiled objects,
         archives, source files of dependencies and all other files that are
-        managed by litemake. """
+        managed by litemake."""
 
-        path = self._data['output']
+        path = self._data["output"]
         if os.path.isabs(path):
             return path
         else:
@@ -52,7 +57,9 @@ class SettingsParser(OptionalFileParser):
             return os.path.join(folder, path)
 
     @property
-    def compiler(self,) -> 'AbstractCompiler':
-        """ A compiler instance that is used to compile different files
-        in litemake. """
-        return self._data['compiler']
+    def compiler(
+        self,
+    ) -> "AbstractCompiler":
+        """A compiler instance that is used to compile different files
+        in litemake."""
+        return self._data["compiler"]

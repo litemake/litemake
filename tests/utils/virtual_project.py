@@ -15,8 +15,8 @@ from litemake.constants import (
 
 
 class VirtualProject:
-    """ An objects that represents a virtual testing folder. This folder can be
-    accessed by the 'project' fixture, and it is unique for each new test. """
+    """An objects that represents a virtual testing folder. This folder can be
+    accessed by the 'project' fixture, and it is unique for each new test."""
 
     def __init__(self, name: str, basepath: str):
         self.name = name
@@ -31,7 +31,7 @@ class VirtualProject:
         os.makedirs(dirpath, exist_ok=True)
 
         # Write content to file
-        with open(path, 'w', encoding='utf8') as file:
+        with open(path, "w", encoding="utf8") as file:
             file.write(cleandoc(content))
 
         # return path to new created file

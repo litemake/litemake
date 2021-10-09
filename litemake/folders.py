@@ -20,19 +20,22 @@ from litemake.compile.graph import (
 from litemake.exceptions import litemakeUnknownTargetsError
 
 import typing
+
 if typing.TYPE_CHECKING:
     from litemake.parse.targets import TargetInfo
     from litemake.compile.graph import CompilationFileNode
 
 
 class Folder(ABC):
-    """ A base class that easily represents a special folder in litemake. """
+    """A base class that easily represents a special folder in litemake."""
 
     def __init__(self, basepath: str) -> None:
         self.__basepath = basepath
 
     @property
-    def basepath(self,) -> str:
+    def basepath(
+        self,
+    ) -> str:
         return self.__basepath
 
     def join(self, *args: str) -> str:
@@ -40,30 +43,37 @@ class Folder(ABC):
 
 
 class OutputFolder(Folder):
-    """ Represents the folder that litemake caches it's data in. """
+    """Represents the folder that litemake caches it's data in."""
 
     @property
-    def archives(self,) -> str:
-        return self.join('archives')
+    def archives(
+        self,
+    ) -> str:
+        return self.join("archives")
 
     @property
-    def objects(self,) -> str:
-        return self.join('objects')
+    def objects(
+        self,
+    ) -> str:
+        return self.join("objects")
 
-    def archive_name(self, target: 'TargetInfo') -> str:
-        return os.path.join(self.archives, f'{target.name}.a')
+    def archive_name(self, target: "TargetInfo") -> str:
+        return os.path.join(self.archives, f"{target.name}.a")
 
-    def object_name(self, target: 'TargetInfo', relative: str) -> str:
+    def object_name(self, target: "TargetInfo", relative: str) -> str:
         folder = os.path.join(self.objects, target.name)
         return os.path.join(folder, relative)
 
 
 class ProjectFolder(Folder):
-    """ Represents the base folder of the user application code.
+    """Represents the base folder of the user application code.
     This folder should contain all configuration files that are needed for
-    litemake to run. """
+    litemake to run."""
 
-    def __init__(self, basepath: str,) -> None:
+    def __init__(
+        self,
+        basepath: str,
+    ) -> None:
         super().__init__(basepath)
 
         targets_path = self.join(TARGETS_CONFIG_FILENAME)
@@ -75,8 +85,10 @@ class ProjectFolder(Folder):
 
         self.output = OutputFolder(self.settings.output)
 
-    def collect(self, *targets: typing.Tuple[str]) -> typing.List['CompilationFileNode']:
-        """ Collect all files that are needed to generate the given targets. """
+    def collect(
+        self, *targets: typing.Tuple[str]
+    ) -> typing.List["CompilationFileNode"]:
+        """Collect all files that are needed to generate the given targets."""
 
         # If no targets are provided, select default target
         if not targets:
@@ -98,10 +110,10 @@ class ProjectFolder(Folder):
 
         return graphs
 
-    def _build_compilation_graph(self, target: 'TargetInfo') -> 'CompilationFileNode':
-        """ Converts the target information info a graph that represents the
+    def _build_compilation_graph(self, target: "TargetInfo") -> "CompilationFileNode":
+        """Converts the target information info a graph that represents the
         relashionships between source files, object files, archives, and
-        executables in the program. """
+        executables in the program."""
 
         compiler = self.settings.compiler()
 
@@ -121,8 +133,7 @@ class ProjectFolder(Folder):
                 glb = os.path.join(self.settings.home, glb)
 
             sources += [
-                g for g in sorted(glob(glb, recursive=True))
-                if os.path.isfile(g)
+                g for g in sorted(glob(glb, recursive=True)) if os.path.isfile(g)
             ]
 
         # Now that all source files are collected, we create instances
