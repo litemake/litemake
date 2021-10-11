@@ -1,16 +1,14 @@
-name: 💡 CI
-
+name: CI
 on: [push, pull_request]
 
 jobs:
-  install:
-    name: 📌 Install
+  test-ubuntu:
+    name: 🎯 Test (Ubuntu)
+    runs-on: ubuntu-latest
 
     strategy:
       matrix:
         py: ["3.6", "3.7", "3.8", "3.9"]
-        os: [ubuntu-latest, windows-latest]
-    runs-on: ${{ matrix.os }}
 
     steps:
       - name: Clone 👀
@@ -21,41 +19,40 @@ jobs:
         with:
           python-version: ${{ matrix.py }}
 
-      - name: Install 📌
-        run: make install
-
-  test:
-    name: 🎯 Test
-    needs: install
-
-    strategy:
-      matrix:
-        py: ["3.6", "3.7", "3.8", "3.9"]
-        os: [ubuntu-latest, windows-latest]
-    runs-on: ${{ matrix.os }}
-
-    steps:
-      - name: Clone 👀
-        uses: actions/checkout@v2
-
-      - name: Setup Python 🐍
-        uses: actions/setup-python@v2
-        with:
-          python-version: ${{ matrix.py }}
-
-      - name: Install Dependencies 📌
+      - name: Install LLVM, Clang, GCC and G++ 🖥️
         run: make install-compilers
-        if: ${{ matrix.os != 'windows-latest' }}
 
       - name: Install Package ✨
-        run: make develop
+        run: make ci
+
+      - name: Test 🎯
+        run: make test
+
+  test-windows:
+    name: 🎯 Test (Windows)
+    runs-on: windows-latest
+
+    strategy:
+      matrix:
+        py: ["3.6", "3.7", "3.8", "3.9"]
+
+    steps:
+      - name: Clone 👀
+        uses: actions/checkout@v2
+
+      - name: Setup Python 🐍
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.py }}
+
+      - name: Install Package ✨
+        run: make ci
 
       - name: Test 🎯
         run: make test
 
   coverage:
     name: 🙃 Generate Coverage Report
-    needs: install
     runs-on: ubuntu-latest
 
     steps:
@@ -71,7 +68,7 @@ jobs:
         run: make install-compilers
 
       - name: Install Package ✨
-        run: make develop
+        run: make ci
 
       - name: Test Coverage 🚀
         run: make cov

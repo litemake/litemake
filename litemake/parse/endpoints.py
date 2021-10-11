@@ -1,4 +1,4 @@
-''' /parse/endpoints.py - litemake - Alon Krymgand Osovsky (2021) '''
+""" /parse/endpoints.py - litemake - Alon Krymgand Osovsky (2021) """
 
 import typing
 from os import path
@@ -15,15 +15,15 @@ from .templates import (
 
 
 class StringTemplate(TemplateEndpoint):
-
-    def __init__(self,
-                 min_len: int = None,
-                 max_len: int = None,
-                 allowed_chars: str = None,
-                 no_repeating: str = None,
-                 no_on_edges: str = None,
-                 default=MISSING,
-                 ) -> None:
+    def __init__(
+        self,
+        min_len: int = None,
+        max_len: int = None,
+        allowed_chars: str = None,
+        no_repeating: str = None,
+        no_on_edges: str = None,
+        default=MISSING,
+    ) -> None:
         super().__init__(default)
         self.min_len = min_len
         self.max_len = max_len
@@ -39,12 +39,12 @@ class StringTemplate(TemplateEndpoint):
         # validate string length
         if self.max_len is not None and self.max_len < len(value):
             raise litemakeTemplateError(
-                fieldpath, f'Max length allowed is {self.max_len!r} (not {len(value)})'
+                fieldpath, f"Max length allowed is {self.max_len!r} (not {len(value)})"
             )
 
         if self.min_len is not None and self.min_len > len(value):
             raise litemakeTemplateError(
-                fieldpath, f'Min length required is {self.min_len!r} (not {len(value)})'
+                fieldpath, f"Min length required is {self.min_len!r} (not {len(value)})"
             )
 
         # validate chars
@@ -52,7 +52,8 @@ class StringTemplate(TemplateEndpoint):
             for c in value:
                 if c not in self.allowed_chars:
                     raise litemakeTemplateError(
-                        fieldpath, f'Character {c!r} is not allowed')
+                        fieldpath, f"Character {c!r} is not allowed"
+                    )
 
         # validate no repeating chars
         if self.no_repeating is not None:
@@ -60,8 +61,7 @@ class StringTemplate(TemplateEndpoint):
                 for c, cc in zip(value[1:], value[:-1]):
                     if c in self.no_repeating and cc in self.no_repeating:
                         raise litemakeTemplateError(
-                            fieldpath,
-                            f"Character {c!r} can't be followed by {c!r}"
+                            fieldpath, f"Character {c!r} can't be followed by {c!r}"
                         )
 
         # validate edges
@@ -69,16 +69,19 @@ class StringTemplate(TemplateEndpoint):
             if len(value) >= 1:
                 if value[0] in self.no_on_edges:
                     raise litemakeTemplateError(
-                        fieldpath, f"Character {value[0]!r} isn't allowed as a starting character")
+                        fieldpath,
+                        f"Character {value[0]!r} isn't allowed as a starting character",
+                    )
                 if value[-1] in self.no_on_edges:
                     raise litemakeTemplateError(
-                        fieldpath, f"Character {value[-1]!r} isn't allowed as an ending character")
+                        fieldpath,
+                        f"Character {value[-1]!r} isn't allowed as an ending character",
+                    )
 
         return value
 
 
 class FolderPathTemplate(StringTemplate):
-
     def __init__(self, must_exist: bool = False, default=MISSING):
         super().__init__(default=default)
         self.must_exist = must_exist
@@ -88,17 +91,16 @@ class FolderPathTemplate(StringTemplate):
 
         if path.isfile(value):
             raise litemakeTemplateError(
-                fieldpath, f"File named {value!r} already exists")
+                fieldpath, f"File named {value!r} already exists"
+            )
 
         if not path.exists(value) and self.must_exist:
-            raise litemakeTemplateError(
-                fieldpath, f"Folder {value!r} doesn't exist")
+            raise litemakeTemplateError(fieldpath, f"Folder {value!r} doesn't exist")
 
         return value
 
 
 class RelFolderPathTemplate(FolderPathTemplate):
-
     def __init__(self, must_exist: bool = False, default=MISSING) -> None:
         super().__init__(must_exist=must_exist, default=default)
 
@@ -107,13 +109,13 @@ class RelFolderPathTemplate(FolderPathTemplate):
 
         if path.isabs(value):
             raise litemakeTemplateError(
-                fieldpath, f"Path must be relative, not absolute ({value!r})")
+                fieldpath, f"Path must be relative, not absolute ({value!r})"
+            )
 
         return value
 
 
 class CompilerTemplate(StringTemplate):
-
     def __init__(self, default=MISSING) -> None:
         super().__init__(default=default)
 
@@ -123,19 +125,18 @@ class CompilerTemplate(StringTemplate):
 
         # TODO: add support for providing a full path to the compiler executable
         if value not in COMPILERS:
-            raise litemakeTemplateError(
-                fieldpath, f'Unsupported compiler {value!r}')
+            raise litemakeTemplateError(fieldpath, f"Unsupported compiler {value!r}")
 
         return COMPILERS.get(value)
 
 
 class IntegerTemplate(TemplateEndpoint):
-
-    def __init__(self,
-                 range_min: int = None,
-                 range_max: int = None,
-                 default=MISSING,
-                 ) -> None:
+    def __init__(
+        self,
+        range_min: int = None,
+        range_max: int = None,
+        default=MISSING,
+    ) -> None:
         super().__init__(default)
         self.range_min = range_min
         self.range_max = range_max
@@ -147,18 +148,19 @@ class IntegerTemplate(TemplateEndpoint):
         if self.range_min is not None:
             if value < self.range_min:
                 raise litemakeTemplateError(
-                    fieldpath, f'Min value allowed is {self.range_min!r}')
+                    fieldpath, f"Min value allowed is {self.range_min!r}"
+                )
 
         if self.range_max is not None:
             if value > self.range_max:
                 raise litemakeTemplateError(
-                    fieldpath, f'Max value allowed is {self.range_max!r}')
+                    fieldpath, f"Max value allowed is {self.range_max!r}"
+                )
 
         return value
 
 
 class BoolTemplate(TemplateEndpoint):
-
     def validate(self, value, fieldpath: typing.List[str]):
         value = super().validate(value, fieldpath)
         self.assert_type(value, bool, fieldpath)
@@ -166,13 +168,13 @@ class BoolTemplate(TemplateEndpoint):
 
 
 class ListTemplate(TemplateEndpoint):
-
-    def __init__(self,
-                 listof: BaseTemplate,
-                 min_len: int = None,
-                 max_len: int = None,
-                 default=MISSING,
-                 ) -> None:
+    def __init__(
+        self,
+        listof: BaseTemplate,
+        min_len: int = None,
+        max_len: int = None,
+        default=MISSING,
+    ) -> None:
         super().__init__(default)
         self.listof = listof
         self.min_len = min_len
@@ -185,33 +187,31 @@ class ListTemplate(TemplateEndpoint):
         if self.min_len is not None:
             if len(value) < self.min_len:
                 raise litemakeTemplateError(
-                    fieldpath,
-                    f'Min {self.min_len!r} item(s) required')
+                    fieldpath, f"Min {self.min_len!r} item(s) required"
+                )
 
         if self.max_len is not None:
             if len(value) > self.max_len:
                 raise litemakeTemplateError(
-                    fieldpath,
-                    f'Max {self.max_len!r} item(s) allowed')
+                    fieldpath, f"Max {self.max_len!r} item(s) allowed"
+                )
 
         new = list()
         for index, item in enumerate(value):
-            new.append(
-                self.listof.validate(item, fieldpath + [index])
-            )
+            new.append(self.listof.validate(item, fieldpath + [index]))
 
         return new
 
 
 class DictTemplate(TemplateEndpoint):
-
-    def __init__(self,
-                 keys: TemplateEndpoint,
-                 values: BaseTemplate,
-                 min_len: int = None,
-                 max_len: int = None,
-                 default=MISSING,
-                 ) -> None:
+    def __init__(
+        self,
+        keys: TemplateEndpoint,
+        values: BaseTemplate,
+        min_len: int = None,
+        max_len: int = None,
+        default=MISSING,
+    ) -> None:
         super().__init__(default)
         self.keys = keys
         self.values = values
@@ -228,14 +228,14 @@ class DictTemplate(TemplateEndpoint):
         if self.min_len is not None:
             if len(value) < self.min_len:
                 raise litemakeTemplateError(
-                    fieldpath,
-                    f'Min {self.min_len!r} item(s) required')
+                    fieldpath, f"Min {self.min_len!r} item(s) required"
+                )
 
         if self.max_len is not None:
             if len(value) > self.max_len:
                 raise litemakeTemplateError(
-                    fieldpath,
-                    f'Max {self.max_len!r} item(s) allowed')
+                    fieldpath, f"Max {self.max_len!r} item(s) allowed"
+                )
 
         new = dict()
         for key, item in value.items():
