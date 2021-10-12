@@ -2,11 +2,9 @@ import os
 import typing
 from inspect import cleandoc
 
-from slugify import slugify
 import tests.utils
 
 from litemake.__main__ import make
-import litemake.exceptions
 from litemake.constants import (
     PACKAGE_CONFIG_FILENAME,
     TARGETS_CONFIG_FILENAME,
