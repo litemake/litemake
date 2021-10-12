@@ -24,3 +24,11 @@ def test_basic_plugin_creation():
         @plugin.hooks.notimplemented
         def not_implemented_hook():
             raise NotImplementedError
+
+
+def test_empty_plugin():
+    def register(plugin):
+        assert set(plugin.hooks) == set()
+
+    with PluginCreator(register) as _:
+        pass  # don't do a thing with the plugin!
