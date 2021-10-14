@@ -3,6 +3,7 @@ from abc import ABC, abstractclassmethod
 from litemake.exceptions import (
     litemakeParsingError,
     litemakeTemplateError,
+    litemakeConfigError,
     litemakeFileNotFoundError,
 )
 
@@ -44,8 +45,8 @@ class FileParser(ABC):
             return self.TEMPLATE.validate(data, fieldpath=list())
 
         except litemakeTemplateError as err:
-            # Raise a custom configuration error if validation faileds
-            raise err.to_config_error(self.filepath)
+            # Raise a custom configuration error if validation fails
+            raise litemakeConfigError.from_template_error(self.filepath, err)
 
     def __init__(self, filepath: str):
         self._filepath = filepath

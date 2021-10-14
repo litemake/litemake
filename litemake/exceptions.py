@@ -2,6 +2,9 @@ import typing
 from .printer import litemakePrinter as Printer
 
 
+T = typing.TypeVar("T")
+
+
 def stringify_fieldpath(path: list) -> str:
     return ".".join(str(p) for p in path)
 
@@ -21,9 +24,7 @@ class litemakeWarning(Exception):
     def __init__(self, *msg: str):
         self.msg = msg
 
-    def print(
-        self,
-    ) -> None:
+    def print(self) -> None:
         Printer.warning("\n".join(self.msg))
 
 
@@ -40,9 +41,6 @@ class litemakeTemplateError(litemakeError):
             raw_msg=msg,
         )
 
-    def to_config_error(self, filename: str) -> "litemakeConfigError":
-        return litemakeConfigError(filename, self.fieldpath, self.raw_msg)
-
 
 class litemakeConfigError(litemakeError):
     """Raised when there is an error in the litemake setup configuration
@@ -57,6 +55,14 @@ class litemakeConfigError(litemakeError):
             f"Under field {stringify_fieldpath(fieldpath)!r} - {msg}",
             raw_msg=msg,
         )
+
+    @classmethod
+    def from_template_error(
+        cls: T,
+        filename: str,
+        template: litemakeTemplateError,
+    ) -> T:
+        return cls(filename, template.fieldpath, template.msg)
 
 
 class litemakeParsingError(litemakeError):
@@ -107,3 +113,19 @@ class litemakeUnknownTargetsError(litemakeError):
 class litemakeNoSourcesWarning(litemakeWarning):
     """Raised by the compiler when there are zero files that match the
     requested source files pattern."""
+
+
+class litemakePluginInitError(litemakeError):
+    def __init__(self, name: str, fieldpath, msg):
+        super().__init__(
+            f"*error while initializing plugin {name}:*",
+            f"Under field {stringify_fieldpath(fieldpath)!r} - {msg}",
+        )
+
+    @classmethod
+    def from_template_error(
+        cls: T,
+        name: str,
+        template: litemakeTemplateError,
+    ) -> T:
+        return cls(name, template.fieldpath, template.msg)
