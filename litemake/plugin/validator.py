@@ -4,7 +4,6 @@ if typing.TYPE_CHECKING:
     from litemake.parse.templates import BaseTemplate
 
 import inspect
-from abc import ABC
 
 from litemake.constants import NAME_CHARS, SPECIAL_CHARS
 from litemake.parse.templates import Template
@@ -14,14 +13,6 @@ from litemake.exceptions import (
     litemakePluginInvalidHooks,
     litemakePluginTemplateInitError,
 )
-
-
-class litemakePlugin(ABC):
-
-    _plugins: typing.List["litemakePlugin"] = list()
-
-    def __init_subclass__(cls) -> None:
-        litemakePlugin._plugins.append(cls)
 
 
 class PluginValidator:
@@ -52,7 +43,7 @@ class PluginValidator:
     @classmethod
     def _validate_from_template(
         cls,
-        plugin: "litemakePlugin",
+        plugin: type,
         template: "BaseTemplate",
         data,
     ) -> None:
@@ -65,7 +56,7 @@ class PluginValidator:
             ) from None
 
     @classmethod
-    def validate(cls, plugin: typing.Type[litemakePlugin]) -> None:
+    def validate(cls, plugin: type) -> None:
         """Checks if the given plugin class is configured correctly, and raises
         an error if something is missing or configured incorrectly."""
 
@@ -79,10 +70,9 @@ class PluginValidator:
         cls._validate_hooks(plugin)
 
     @classmethod
-    def _validate_hooks(cls, plugin: typing.Type[litemakePlugin]) -> None:
+    def _validate_hooks(cls, plugin: type) -> None:
 
         hooks = cls._get_cls_methods(plugin)
-
         unknown = set(hooks) - cls.VALID_HOOK_NAMES
         if unknown:
             raise litemakePluginInvalidHooks(

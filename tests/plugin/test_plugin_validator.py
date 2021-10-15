@@ -1,11 +1,11 @@
 import pytest
 
-from litemake.plugin.base import litemakePlugin, PluginValidator
+from litemake.plugin.validator import PluginValidator
 from litemake.exceptions import litemakePluginInitError
 
 
 def test_empty_plugin():
-    class MyPlugin(litemakePlugin):
+    class MyPlugin:
         pass
 
     with pytest.raises(litemakePluginInitError) as err:
@@ -17,7 +17,7 @@ def test_empty_plugin():
 
 
 def test_no_hooks_plugin():
-    class MyPlugin(litemakePlugin):
+    class MyPlugin:
         name = "my-plugin"
         description = "A plugin created for testing only!"
 
@@ -25,7 +25,7 @@ def test_no_hooks_plugin():
 
 
 def test_invalid_hook():
-    class MyPlugin(litemakePlugin):
+    class MyPlugin:
         name = "my-plugin"
 
         def hello_there(self) -> None:
@@ -40,7 +40,7 @@ def test_invalid_hook():
 
 
 def test_valid_plugin():
-    class MyPlugin(litemakePlugin):
+    class MyPlugin:
         name = "my-plugin"
         description = "this is my description!"
 
@@ -48,7 +48,7 @@ def test_valid_plugin():
 
 
 def test_all_hooks_plugin():
-    class MyPlugin(litemakePlugin):
+    class MyPlugin:
         name = "my-plugin"
 
         # fmt: off
