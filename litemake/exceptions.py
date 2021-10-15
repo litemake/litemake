@@ -11,19 +11,12 @@ def stringify_fieldpath(path: list) -> str:
 
 class litemakeError(Exception):
     def __init__(self, *msg: str, raw_msg: str = None):
+        super().__init__(msg)
         self.msg = msg
         self.raw_msg = raw_msg
 
     def print(self) -> None:
         Printer.error("\n".join(self.msg))
-
-
-class litemakeWarning(Exception):
-    def __init__(self, *msg: str):
-        self.msg = msg
-
-    def print(self) -> None:
-        Printer.warning("\n".join(self.msg))
 
 
 class litemakeTemplateError(litemakeError):
