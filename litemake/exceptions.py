@@ -14,9 +14,7 @@ class litemakeError(Exception):
         self.msg = msg
         self.raw_msg = raw_msg
 
-    def print(
-        self,
-    ) -> None:
+    def print(self) -> None:
         Printer.error("\n".join(self.msg))
 
 
@@ -62,7 +60,7 @@ class litemakeConfigError(litemakeError):
         filename: str,
         template: litemakeTemplateError,
     ) -> T:
-        return cls(filename, template.fieldpath, template.msg)
+        return cls(filename, template.fieldpath, template.raw_msg)
 
 
 class litemakeParsingError(litemakeError):
@@ -116,10 +114,14 @@ class litemakeNoSourcesWarning(litemakeWarning):
 
 
 class litemakePluginInitError(litemakeError):
-    def __init__(self, name: str, fieldpath, msg):
+    def __init__(self, name: str, fieldpath: typing.List[str], msg: str) -> None:
+        self.name = name
+        self.fieldpath = fieldpath
+
         super().__init__(
             f"*error while initializing plugin {name}:*",
             f"Under field {stringify_fieldpath(fieldpath)!r} - {msg}",
+            raw_msg=msg,
         )
 
     @classmethod
@@ -128,4 +130,18 @@ class litemakePluginInitError(litemakeError):
         name: str,
         template: litemakeTemplateError,
     ) -> T:
-        return cls(name, template.fieldpath, template.msg)
+        return cls(name, template.fieldpath, template.raw_msg)
+
+
+class litemakePluginInvalidHooksError(litemakeError):
+    def __init__(self, name: str, hooks: typing.Set[str]):
+        self.name = name
+        self.hooks = hooks
+
+        hook = "hook" if len(hooks) < 2 else "hooks"
+        msg = f"Provided invalid {hook}: {', '.join(repr(n) for n in hooks)}"
+        super().__init__(
+            f"*error while initializing plugin {name!r}:*",
+            msg,
+            raw_msg=msg,
+        )
