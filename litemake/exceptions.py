@@ -119,7 +119,7 @@ class litemakePluginInitError(litemakeError):
         self.fieldpath = fieldpath
 
         super().__init__(
-            f"*error while initializing plugin {name}:*",
+            f"*error while initializing plugin class {name!r}:*",
             f"Under field {stringify_fieldpath(fieldpath)!r} - {msg}",
             raw_msg=msg,
         )
@@ -131,17 +131,3 @@ class litemakePluginInitError(litemakeError):
         template: litemakeTemplateError,
     ) -> T:
         return cls(name, template.fieldpath, template.raw_msg)
-
-
-class litemakePluginInvalidHooksError(litemakeError):
-    def __init__(self, name: str, hooks: typing.Set[str]):
-        self.name = name
-        self.hooks = hooks
-
-        hook = "hook" if len(hooks) < 2 else "hooks"
-        msg = f"Provided invalid {hook}: {', '.join(repr(n) for n in hooks)}"
-        super().__init__(
-            f"*error while initializing plugin {name!r}:*",
-            msg,
-            raw_msg=msg,
-        )

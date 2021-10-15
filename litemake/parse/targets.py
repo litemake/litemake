@@ -1,4 +1,3 @@
-import string
 import typing
 from dataclasses import dataclass
 
@@ -12,8 +11,7 @@ from .endpoints import (
     RelFolderPathTemplate,
 )
 
-SPECIAL_CHARS = "-_."
-NAME_CHARS = string.ascii_letters + string.digits + SPECIAL_CHARS
+from litemake.constants import NAME_CHARS, SPECIAL_CHARS
 
 
 @dataclass
