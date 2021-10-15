@@ -108,19 +108,25 @@ class litemakeUnknownTargetsError(litemakeError):
         super().__init__(f"*unknown {title}:* {targets_str}")
 
 
-class litemakeNoSourcesWarning(litemakeWarning):
-    """Raised by the compiler when there are zero files that match the
-    requested source files pattern."""
-
-
 class litemakePluginInitError(litemakeError):
-    def __init__(self, name: str, fieldpath: typing.List[str], msg: str) -> None:
-        self.name = name
-        self.fieldpath = fieldpath
+    """Raised by the plugin collector when it stumbles upon a plugin that is
+    not configured correctly and can't be initialized."""
 
+    def __init__(self, name: str, msg: str, raw_msg: str = None) -> None:
+        self.name = name
         super().__init__(
             f"*error while initializing plugin class {name!r}:*",
-            f"Under field {stringify_fieldpath(fieldpath)!r} - {msg}",
+            msg,
+            raw_msg=msg if raw_msg is None else raw_msg,
+        )
+
+
+class litemakePluginTemplateInitError(litemakePluginInitError):
+    def __init__(self, name, fieldpath: typing.List[str], msg: str) -> None:
+        self.fieldpath = fieldpath
+        super().__init__(
+            name,
+            msg=f"Under field {stringify_fieldpath(fieldpath)!r} - {msg}",
             raw_msg=msg,
         )
 
@@ -131,3 +137,14 @@ class litemakePluginInitError(litemakeError):
         template: litemakeTemplateError,
     ) -> T:
         return cls(name, template.fieldpath, template.raw_msg)
+
+
+class litemakePluginInvalidHooks(litemakePluginInitError):
+    def __init__(self, name: str, hooks: typing.Set[str]) -> None:
+        self.hook_names = hooks
+
+        hook_s = "hook" if len(hooks) < 2 else "hooks"
+        super().__init__(
+            name=name,
+            msg=f"Invalid {hook_s}: {', '.join(repr(n) for n in hooks)}",
+        )
