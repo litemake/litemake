@@ -22,8 +22,8 @@ from litemake.exceptions import litemakeUnknownTargetsError
 import typing
 
 if typing.TYPE_CHECKING:
-    from litemake.parse.targets import TargetInfo
-    from litemake.compile.graph import CompilationFileNode
+    from litemake.parse.targets import TargetInfo  # pragma: no cover
+    from litemake.compile.graph import CompilationFileNode  # pragma: no cover
 
 
 class Folder(ABC):

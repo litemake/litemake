@@ -7,7 +7,7 @@ from fractions import Fraction
 import typing
 
 if typing.TYPE_CHECKING:
-    from litemake.compile.graph import CompilationFileNode
+    from litemake.compile.graph import CompilationFileNode  # pragma: no cover
 
 from .printer import Color, get_terminal_width
 from litemake.compile.status import NodeCompilationStatus
