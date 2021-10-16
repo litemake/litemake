@@ -1,4 +1,5 @@
 from .validator import PluginValidator
+from .manager import litemakePluginManager
 
 import typing
 
@@ -13,3 +14,7 @@ class litemakePluginCollector:
         PluginValidator.validate(cls)
         self._plugins.append(cls)
         return cls
+
+    def initialize(self) -> litemakePluginManager:
+        instances = [plug() for plug in self._plugins]
+        return litemakePluginManager(*instances)
