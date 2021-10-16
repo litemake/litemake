@@ -1,8 +1,8 @@
 import typing
 
 if typing.TYPE_CHECKING:
-    from .graph import CompilationFileNode
-    from .status import NodeCompilationStatus
+    from .graph import CompilationFileNode  # pragma: no cover
+    from .status import NodeCompilationStatus  # pragma: no cover
 
 import litemake.exceptions
 from .status import (
