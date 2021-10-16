@@ -23,3 +23,6 @@ VALID_HOOK_NAMES = {
     "after_compiling_node",
     "after_node_compilation",
 }
+
+
+PLUGINS_ENTRY_POINT = "litemake-plugins"
