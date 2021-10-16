@@ -1,31 +1,16 @@
-import typing
 from abc import ABC, abstractmethod
 
 
 class Hook(ABC):
-    def __new__(cls) -> typing.Tuple["Hook", typing.Callable]:
-        self = super(Hook, cls).__new__(cls)
+    def __init__(self, *funcs):
+        self._registered = funcs
 
-        # From the __new__ method documentation ():
-        # If __new__() does not return an instance of cls, then the new
-        # instance’s __init__() method will not be invoked.
-        # Thus, we need to call __init__ on self by our own.
-        self.__init__()
+    def __call__(self, *args, **kwargs):
+        """When treating a hook instance as a function and trying to "call it"
+        using the 'hook()' syntax, all registered hook triggers will be
+        executed."""
 
-        return self, self._run
-
-    def __init__(self):
-        self._registered = list()
-
-    def _register(self, func: typing.Callable) -> None:
-        """Recives a function and registers it to the hook."""
-        self._registered.append(func)
-
-    def __call__(self, func: typing.Callable) -> typing.Callable:
-        """A function decorator that registers the decorated function
-        to the hook."""
-        self._register(func)
-        return func
+        return self._run(*args, **kwargs)
 
     @abstractmethod
     def _run(self, *args, **kwargs):
