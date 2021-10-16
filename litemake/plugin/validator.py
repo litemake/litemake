@@ -5,7 +5,7 @@ if typing.TYPE_CHECKING:
 
 import inspect
 
-from litemake.constants import NAME_CHARS, SPECIAL_CHARS
+from litemake.constants import NAME_CHARS, SPECIAL_CHARS, VALID_HOOK_NAMES
 from litemake.parse.templates import Template
 from litemake.parse.endpoints import StringTemplate
 from litemake.exceptions import (
@@ -27,18 +27,6 @@ class PluginValidator:
         ),
         description=StringTemplate(max_len=200, default=str()),
     )
-
-    VALID_HOOK_NAMES = {
-        # node collection
-        "before_node_collection",
-        "after_collecting_node",
-        "after_node_collection",
-        # node compilation
-        "before_node_compilation",
-        "before_compiling_node",
-        "after_compiling_node",
-        "after_node_compilation",
-    }
 
     @classmethod
     def _validate_from_template(
@@ -73,7 +61,7 @@ class PluginValidator:
     def _validate_hooks(cls, plugin: type) -> None:
 
         hooks = cls._get_cls_methods(plugin)
-        unknown = set(hooks) - cls.VALID_HOOK_NAMES
+        unknown = set(hooks) - VALID_HOOK_NAMES
         if unknown:
             raise litemakePluginInvalidHooks(
                 name=plugin.__name__,
