@@ -6,7 +6,7 @@ from litemake.constants import PLUGINS_ENTRY_POINT
 import typing
 
 if typing.TYPE_CHECKING:
-    from .manager import litemakePluginManager
+    from .manager import litemakePluginManager  # pragma: no cover
 
 
 def load_plugins() -> "litemakePluginManager":

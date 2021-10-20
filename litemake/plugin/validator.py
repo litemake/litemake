@@ -1,7 +1,7 @@
 import typing
 
 if typing.TYPE_CHECKING:
-    from litemake.parse.templates import BaseTemplate
+    from litemake.parse.templates import BaseTemplate  # pragma: no cover
 
 import inspect
 
