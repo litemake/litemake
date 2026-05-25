@@ -5,7 +5,6 @@ from .file import FileParser
 from .templates import Template
 from .endpoints import StringTemplate, IntegerTemplate
 
-
 SPECIAL_CHARS = "-_."
 NAME_CHARS = string.ascii_letters + string.digits + SPECIAL_CHARS
 

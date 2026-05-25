@@ -1,6 +1,6 @@
-""" printer.py - litemake - Alon Krymgand Osovsky (2021)
+"""printer.py - litemake - Alon Krymgand Osovsky (2021)
 
-    A class that takes care of all printing done by litemake. """
+A class that takes care of all printing done by litemake."""
 
 import re
 import os

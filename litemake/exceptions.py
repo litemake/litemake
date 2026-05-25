@@ -1,7 +1,6 @@
 import typing
 from .printer import litemakePrinter as Printer
 
-
 T = typing.TypeVar("T")
 
 

@@ -28,12 +28,10 @@ def test_basic_hello_world(project: "VirtualProject"):
     """,
     )
 
-    project.add_targets_file(
-        f"""
+    project.add_targets_file(f"""
         [build]
         sources=['{main_c}']
-    """
-    )
+    """)
 
     project.run("build")
     assert execute(project.join("build")) == "Hello from litemake!\n"
