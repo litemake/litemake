@@ -1,4 +1,4 @@
-""" Constant values that are used and shared across the litemake source code. """
+"""Constant values that are used and shared across the litemake source code."""
 
 import string
 

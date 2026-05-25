@@ -1,4 +1,4 @@
-""" litemake - Alon Krymgand Osovsky (2021) """
+"""litemake - Alon Krymgand Osovsky (2021)"""
 
 __version__ = "0.1.0"
 __description__ = (
