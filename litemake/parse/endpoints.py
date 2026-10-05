@@ -1,4 +1,4 @@
-""" /parse/endpoints.py - litemake - Alon Krymgand Osovsky (2021) """
+"""/parse/endpoints.py - litemake - Alon Krymgand Osovsky (2021)"""
 
 import typing
 from os import path

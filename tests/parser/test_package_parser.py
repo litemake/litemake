@@ -9,11 +9,9 @@ if typing.TYPE_CHECKING:
 
 
 def test_basic_package_info(project: "VirtualProject"):
-    path = project.add_package_file(
-        """
+    path = project.add_package_file("""
         name="testing"
-    """
-    )
+    """)
 
     info = PackageParser(path)
     assert info.name == "testing"
@@ -25,8 +23,7 @@ def test_basic_package_info(project: "VirtualProject"):
 
 
 def test_package_custom_version(project: "VirtualProject"):
-    path = project.add_package_file(
-        """
+    path = project.add_package_file("""
         name="testing"
 
         [version]
@@ -34,8 +31,7 @@ def test_package_custom_version(project: "VirtualProject"):
         minor=2
         patch=3
         label="dev"
-    """
-    )
+    """)
 
     info = PackageParser(path)
     assert info.version == (1, 2, 3)
@@ -44,8 +40,7 @@ def test_package_custom_version(project: "VirtualProject"):
 
 
 def test_package_all_properties(project: "VirtualProject"):
-    path = project.add_package_file(
-        """
+    path = project.add_package_file("""
         name="hello-world"
         description="A simple hello world program."
         author="Alon Krymgand (RealA10N)"
@@ -55,8 +50,7 @@ def test_package_all_properties(project: "VirtualProject"):
         minor=2
         patch=3
         label="production"
-    """
-    )
+    """)
 
     info = PackageParser(path)
     assert info.name == "hello-world"
@@ -80,11 +74,9 @@ def test_package_all_properties(project: "VirtualProject"):
     ),
 )
 def test_package_invalid_names(name, project: "VirtualProject"):
-    path = project.add_package_file(
-        f"""
+    path = project.add_package_file(f"""
         name="{name}"
-    """
-    )
+    """)
 
     with pytest.raises(litemakeConfigError):
         PackageParser(path)

@@ -26,12 +26,10 @@ def test_absolute_paths(project: "VirtualProject"):
     src = project.add_dir("src/")
     out = project.add_dir(".litemake_cache/")
 
-    path = project.add_settings_file(
-        f"""
+    path = project.add_settings_file(f"""
         home='{src}'
         output='{out}'
-    """
-    )
+    """)
 
     info = SettingsParser(path)
     assert info.home == src
@@ -42,12 +40,10 @@ def test_relative_paths(project: "VirtualProject"):
     src = project.add_dir("src/")
     out = project.add_dir(".litemake_cache/")
 
-    path = project.add_settings_file(
-        """
+    path = project.add_settings_file("""
         home="src/"
         output=".litemake_cache/"
-    """
-    )
+    """)
 
     info = SettingsParser(path)
     assert info.home == src
