@@ -7,8 +7,7 @@ if typing.TYPE_CHECKING:
 
 
 def test_target_names(project: "VirtualProject"):
-    path = project.add_targets_file(
-        """
+    path = project.add_targets_file("""
         [build]
         library=true
         sources=["src/**/*.c"]
@@ -16,8 +15,7 @@ def test_target_names(project: "VirtualProject"):
 
         [test]
         sources=["src/**/*.c", "tests/**/*.c"]
-    """
-    )
+    """)
 
     info = TargetsParser(path)
     assert info.targets == ["build", "test"]
